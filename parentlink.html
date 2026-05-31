@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParentLink Portal - Sri Basaveswara School</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons System -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #ffffff;
+      color: #0f172a;
+    }
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+    /* Screenshot matched primary color button */
+    .btn-navy {
+      background-color: #00205B;
+      color: #ffffff;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-navy:hover {
+      background-color: #00153D;
+      box-shadow: 0 4px 12px rgba(0, 32, 91, 0.2);
+    }
+    /* Minimal lines for screenshot matched input */
+    .input-line {
+      border: none;
+      border-bottom: 2px solid #e2e8f0;
+      border-radius: 0;
+      padding: 0.75rem 0;
+      width: 100%;
+      background: transparent;
+      transition: border-color 0.2s;
+    }
+    .input-line:focus {
+      outline: none;
+      border-color: #00205B;
+    }
+    
+    /* 3D Flip Card for Virtual Badge */
+    .flip-card {
+      background-color: transparent;
+      perspective: 1000px;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: 1.5rem;
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
+    
+    /* Elegant Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              750: '#00205B',
+              900: '#00153D',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-full flex flex-col justify-between">
+
+  <!-- Toast Notification System -->
+  <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- Loading Overlay with Render free-tier cold start support -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="flex flex-col items-center gap-4">
+      <div class="w-14 h-14 border-4 border-navy-750 border-t-transparent rounded-full animate-spin"></div>
+      <p id="loadingOverlayText" class="text-xs font-bold text-navy-750 tracking-wider uppercase font-outfit text-center max-w-xs leading-relaxed">Waking up Cloud Database Server<br/><span class="text-[9px] text-slate-400 mt-1 font-semibold block">(this may take up to 45 seconds during spin-up)</span></p>
+    </div>
+  </div>
+
+  <!-- Main View Container -->
+  <div class="flex-grow flex flex-col justify-center items-center py-10 px-4">
+    
+    <!-- 1. LOGIN SCREEN (Screenshot Matched & Minimal) -->
+    <div id="loginView" class="w-full max-w-md bg-white p-8 sm:p-12 transition-all duration-300">
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-12 h-12 bg-navy-750 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4 font-outfit">BS</div>
+        <h2 class="text-3xl font-extrabold text-navy-750 font-outfit tracking-tight text-center">Sri Basaveswara School</h2>
+        <p class="text-sm text-slate-500 mt-1 uppercase font-bold tracking-wider text-center">ParentLink</p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-black font-outfit text-slate-900 mb-2">Sign in to ParentLink</h3>
+        <p class="text-xs text-slate-400">Please enter your Student Roll Number or Registered Email below to access grades, attendance, and fee history.</p>
+      </div>
+
+      <form id="loginForm" class="space-y-6" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="emailInput">Username</label>
+          <input type="text" id="emailInput" class="input-line text-sm" placeholder="Enter Username or Roll Number" required>
+        </div>
+
+        <div class="relative">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="passwordInput">Password</label>
+          <input type="password" id="passwordInput" class="input-line text-sm pr-10" placeholder="••••••••" required>
+          <button type="button" onclick="togglePasswordVisibility('passwordInput', 'eyeIcon')" class="absolute right-0 bottom-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+            <i id="eyeIcon" data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-4">
+          LOGIN
+        </button>
+      </form>
+
+      <div class="mt-8 text-center text-xs text-slate-500">
+        <p>New Student/Parent? <button onclick="switchView('signupView')" class="text-navy-750 font-bold hover:underline">Apply for Admission Account</button></p>
+        <p class="mt-4 text-[10px] text-slate-400">Public Portal Gateway &bull; Estd 1978</p>
+      </div>
+    </div>
+
+    <!-- 2. SIGNUP VIEW (Self-Registration Request) -->
+    <div id="signupView" class="w-full max-w-md bg-white p-8 sm:p-12 transition-all duration-300 hidden">
+      <div class="flex items-center gap-3 mb-8">
+        <button onclick="switchView('loginView')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+        <div>
+          <h2 class="text-xl font-bold font-outfit text-navy-750">Admission Signup</h2>
+          <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">ParentLink Admission Request</p>
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <p class="text-xs text-slate-500">Submit your registration details below. Your submission will queue into Super Admin <strong>Adarsh B A</strong>'s registry approvals queue.</p>
+      </div>
+
+      <form id="signupForm" class="space-y-4" onsubmit="handleSignup(event)">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupName">Full Student Name</label>
+          <input type="text" id="signupName" class="input-line text-sm" placeholder="e.g. Master Abhishek Gowda" required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupEmail">Username (Email)</label>
+          <input type="email" id="signupEmail" class="input-line text-sm" placeholder="e.g. student@gmail.com" required>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupClass">Class</label>
+            <select id="signupClass" class="input-line text-sm" required>
+              <option value="Class 10">Class 10</option>
+              <option value="Class 9">Class 9</option>
+              <option value="Class 8">Class 8</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupSection">Section</label>
+            <select id="signupSection" class="input-line text-sm" required>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="relative">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" class="input-line text-sm pr-10" placeholder="Create new password" required>
+          <button type="button" onclick="togglePasswordVisibility('signupPassword', 'signupEyeIcon')" class="absolute right-0 bottom-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+            <i id="signupEyeIcon" data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-6">
+          SUBMIT ADMISSION REQUEST
+        </button>
+      </form>
+    </div>
+
+    <!-- 2.5 TEMPORARY PASSWORD ROTATION (Forced Reset Flow for Student Boot) -->
+    <div id="resetPwView" class="w-full max-w-md bg-white p-8 sm:p-12 transition-all duration-300 hidden">
+      <div class="flex flex-col items-center mb-6">
+        <div class="w-12 h-12 bg-amber-500 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4"><i data-lucide="key-round" class="w-6 h-6"></i></div>
+        <h2 class="text-2xl font-black font-outfit text-slate-900 tracking-tight text-center">Rotate Temp Password</h2>
+        <p class="text-xs text-rose-500 font-bold uppercase tracking-wider mt-1">Required Safety Measure</p>
+      </div>
+
+      <div class="mb-6">
+        <p class="text-xs text-slate-500 text-center">Student, you logged in using your initial seed temporary password. For enterprise integrity, please define a secure, highly unique custom credentials key to proceed.</p>
+      </div>
+
+      <form id="resetPwForm" class="space-y-4" onsubmit="handleTempPasswordReset(event)">
+        <div class="relative">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="resetPasswordInput">Define Custom Secure Password</label>
+          <input type="password" id="resetPasswordInput" class="input-line text-sm pr-10" placeholder="••••••••" required>
+          <button type="button" onclick="togglePasswordVisibility('resetPasswordInput', 'resetEyeIcon')" class="absolute right-0 bottom-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+            <i id="resetEyeIcon" data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-6">
+          SET CUSTOM CREDENTIALS
+        </button>
+      </form>
+    </div>
+
+    <!-- 3. STUDENT DASHBOARD (Highly premium dashboard) -->
+    <div id="dashboardView" class="w-full max-w-6xl bg-slate-50 rounded-3xl border border-slate-100 shadow-2xl p-6 sm:p-10 transition-all duration-300 hidden">
+      
+      <!-- Dashboard Top Branded Header -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200/80 pb-6 mb-8 gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-navy-750 text-white rounded-2xl flex items-center justify-center font-bold text-2xl font-outfit shadow-lg shadow-navy-750/20">BS</div>
+          <div>
+            <span class="px-2 py-0.5 rounded bg-emerald-50 text-[10px] font-black tracking-widest text-emerald-600 uppercase">Active Session 2026</span>
+            <h2 id="displayStudentName" class="text-2xl font-black font-outfit text-slate-900 mt-1">Master Abhishek Gowda</h2>
+            <p class="text-xs text-slate-500 flex items-center gap-2">
+              <span>Roll Number: <strong id="displayRollNumber" class="text-navy-750">40001</strong></span>
+              <span>&bull;</span>
+              <span>Class Assignment: <strong id="displayClassAssigned" class="text-navy-750">Class 10-A</strong></span>
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2 w-full sm:w-auto">
+          <button onclick="logout()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors w-full sm:w-auto justify-center">
+            <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Columns -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Left Column: Navigation Sidebar & Badges -->
+        <div class="lg:col-span-4 space-y-6">
+          
+          <!-- Navigation list tabs -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200/60 shadow-sm space-y-1">
+            <button onclick="switchTab('tabOverview')" id="btnTabOverview" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors bg-navy-750 text-white">
+              <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i> Overview Summary
+            </button>
+            <button onclick="switchTab('tabNoticeBoard')" id="btnTabNoticeBoard" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="megaphone" class="w-4.5 h-4.5"></i> notice board
+            </button>
+            <button onclick="switchTab('tabHomework')" id="btnTabHomework" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="clipboard-list" class="w-4.5 h-4.5"></i> Daily Homework
+            </button>
+            <button onclick="switchTab('tabGrades')" id="btnTabGrades" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="book-open" class="w-4.5 h-4.5"></i> Academic Grades
+            </button>
+            <button onclick="switchTab('tabLibrary')" id="btnTabLibrary" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="book" class="w-4.5 h-4.5"></i> library checkouts
+            </button>
+            <button onclick="switchTab('tabFees')" id="btnTabFees" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="credit-card" class="w-4.5 h-4.5"></i> Tuition Fees
+            </button>
+            <button onclick="switchTab('tabBadge')" id="btnTabBadge" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="contact" class="w-4.5 h-4.5"></i> Virtual ID Badge
+            </button>
+            <button onclick="switchTab('tabTimetable')" id="btnTabTimetable" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="calendar" class="w-4.5 h-4.5"></i> Class Timetable
+            </button>
+            <button onclick="switchTab('tabAttendanceCalendar')" id="btnTabAttendanceCalendar" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="calendar-days" class="w-4.5 h-4.5"></i> Detailed Attendance
+            </button>
+            <button onclick="switchTab('tabTransport')" id="btnTabTransport" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="bus" class="w-4.5 h-4.5"></i> Campus Transport
+            </button>
+            <button onclick="switchTab('tabSupport')" id="btnTabSupport" class="tab-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors text-slate-600 hover:bg-slate-100">
+              <i data-lucide="help-circle" class="w-4.5 h-4.5"></i> Helpdesk Tickets
+            </button>
+          </div>
+
+          <!-- Attendance Widget Card -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm flex items-center justify-between">
+            <div class="space-y-1.5">
+              <h4 class="text-xs font-extrabold uppercase text-slate-400 tracking-wider">Attendance Status</h4>
+              <p class="text-2xl font-black font-outfit text-slate-900" id="attStatsText">24 / 25 Days</p>
+              <span class="text-[10px] text-emerald-500 font-bold flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Above school limit (75%)</span>
+            </div>
+            
+            <!-- Circular Progress SVG Ring -->
+            <div class="relative w-20 h-20 flex items-center justify-center">
+              <svg class="w-full h-full transform -rotate-90">
+                <circle cx="40" cy="40" r="34" stroke-width="6" stroke="#f1f5f9" fill="transparent"/>
+                <circle id="attProgressCircle" cx="40" cy="40" r="34" stroke-width="6" stroke="#10b981" stroke-linecap="round" fill="transparent" stroke-dasharray="213.6" stroke-dashoffset="21.36"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center text-xs font-black font-outfit text-slate-800" id="attPercentage">96%</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Changing Tab Workspaces -->
+        <div class="lg:col-span-8 space-y-6">
+          
+          <!-- Tab 1: Overview Dashboard -->
+          <div id="tabOverview" class="tab-content space-y-6">
+            <div class="bg-gradient-to-r from-navy-750 to-indigo-900 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-lg shadow-navy-750/10">
+              <div class="absolute -right-24 -bottom-24 w-64 h-64 bg-white/5 rounded-full pointer-events-none"></div>
+              <span class="px-2.5 py-1 rounded bg-white/15 text-[9px] font-black uppercase tracking-widest font-outfit">Official Notification</span>
+              <h3 class="text-xl font-extrabold font-outfit mt-4 mb-2">Welcome to ParentLink Portal</h3>
+              <p class="text-xs text-indigo-100 leading-relaxed max-w-xl">
+                This digital dashboard provides direct access to real-time administrative databases. Keep up to date with batch marks uploaded by subject teachers, view academic report card certifications, and audit fee accounts.
+              </p>
+              <div class="mt-6 flex gap-3 flex-wrap">
+                <button onclick="switchTab('tabGrades')" class="px-4 py-2 bg-white text-navy-750 font-bold text-xs rounded-xl shadow-sm hover:scale-105 transition-transform">
+                  View Report Card
+                </button>
+                <button onclick="switchTab('tabFees')" class="px-4 py-2 bg-white/10 text-white font-bold text-xs rounded-xl border border-white/20 hover:bg-white/15 transition-colors">
+                  Pay Outstanding Fees
+                </button>
+              </div>
+            </div>
+
+            <!-- Fast Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center mb-4"><i data-lucide="book-check" class="w-5 h-5"></i></div>
+                <h5 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Subjects Enrolled</h5>
+                <p id="statSubjectCount" class="text-2xl font-black font-outfit text-slate-900 mt-1">4 Enrolled</p>
+              </div>
+
+              <div class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4"><i data-lucide="award" class="w-5 h-5"></i></div>
+                <h5 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Exam Sessions</h5>
+                <p id="statExamCount" class="text-2xl font-black font-outfit text-slate-900 mt-1">Mid-Term 2026</p>
+              </div>
+
+              <div class="bg-white rounded-2xl p-6 border border-slate-200/60 shadow-sm">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4"><i data-lucide="wallet" class="w-5 h-5"></i></div>
+                <h5 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Fees Balance Due</h5>
+                <p id="statFeesDue" class="text-2xl font-black font-outfit text-emerald-600 mt-1">INR 30,000</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Academic Grades -->
+          <div id="tabGrades" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6">
+              <div class="flex justify-between items-center mb-6">
+                <div>
+          <h4 class="text-lg font-black font-outfit text-slate-900">Academic Scoresheet</h4>
+                  <p class="text-xs text-slate-500">Official grades ledger signed by Sri Basaveswara School Principal</p>
+                </div>
+                <button onclick="window.print()" class="p-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-600 transition-colors shadow-sm" title="Print Transcript">
+                  <i data-lucide="printer" class="w-5 h-5"></i>
+                </button>
+              </div>
+
+              <!-- Visual Grades Analytics progress bars comparison -->
+              <div class="mb-6 p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-3" id="gradesChartContainer">
+                <h5 class="text-[10px] font-black uppercase text-slate-400 tracking-wider">Visual Performance Analytics</h5>
+                <div class="space-y-3" id="gradesChartBars">
+                  <!-- Dynamic Progress Bars -->
+                </div>
+              </div>
+
+              <!-- Report Card Table -->
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-100">
+                      <th class="py-3 px-4">Subject</th>
+                      <th class="py-3 px-4">Session</th>
+                      <th class="py-3 px-4 text-center">Marks Obtained</th>
+                      <th class="py-3 px-4 text-center">Max Marks</th>
+                      <th class="py-3 px-4 text-center">Percentage</th>
+                      <th class="py-3 px-4 text-center">Grade</th>
+                    </tr>
+                  </thead>
+                  <tbody id="gradesTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Tuition Fees Ledger -->
+          <div id="tabFees" class="tab-content space-y-6 hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              
+              <!-- Ledger summary -->
+              <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 space-y-6">
+                <div>
+                  <h4 class="text-lg font-black font-outfit text-slate-900">Fee Summary</h4>
+                  <p class="text-xs text-slate-500">Fee status and dynamic outstanding totals</p>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center text-xs py-1 border-b border-slate-100">
+                    <span class="text-slate-500 font-semibold">Total Invoice Value</span>
+                    <span class="font-bold text-slate-800" id="feeInvoiceVal">INR 45,000.00</span>
+                  </div>
+                  <div class="flex justify-between items-center text-xs py-1 border-b border-slate-100">
+                    <span class="text-slate-500 font-semibold">Amount Paid Roster</span>
+                    <span class="font-bold text-emerald-600" id="feePaidVal">INR 15,000.00</span>
+                  </div>
+                  <div class="flex justify-between items-center text-xs py-1 border-b border-slate-100">
+                    <span class="text-slate-500 font-semibold">Outstanding Balance</span>
+                    <span class="font-black text-rose-600 text-sm animate-pulse" id="feeDueVal">INR 30,000.00</span>
+                  </div>
+                </div>
+
+                <!-- UPI simulated payment -->
+                <div class="bg-indigo-50/50 rounded-2xl p-4 space-y-3">
+                  <span class="text-[9px] font-black uppercase tracking-wider text-indigo-600">Simulate Online Payment</span>
+                  <div class="flex gap-2">
+                    <input type="number" id="payAmountInput" class="px-3 py-2 border border-slate-200 rounded-xl text-xs flex-grow focus:outline-none focus:border-navy-750" placeholder="Enter Payment Amount (INR)">
+                    <button onclick="triggerSimulatedPayment()" class="px-4 py-2 btn-navy text-xs font-bold rounded-xl whitespace-nowrap shadow-sm">
+                      PAY WITH UPI
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Receipts History -->
+              <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6">
+                <h4 class="text-base font-black font-outfit text-slate-900 mb-4">Receipt History Ledger</h4>
+                <div class="space-y-3 max-h-[280px] overflow-y-auto pr-2" id="feeReceiptsList">
+                  <!-- Dynamic receipts -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Virtual ID Badge (Flips) -->
+          <div id="tabBadge" class="tab-content space-y-6 hidden flex flex-col items-center">
+            
+            <p class="text-xs text-slate-500 text-center max-w-sm mb-4">
+              Click the badge card below to flip it and view the cryptographic QR verification tag.
+            </p>
+
+            <!-- 3D Flip Badge container -->
+            <div id="idFlipCard" class="flip-card w-72 h-[420px]" onclick="toggleBadgeFlip()">
+              <div class="flip-card-inner h-full shadow-2xl rounded-3xl transition-transform duration-700">
+                
+                <!-- Front Side of ID Badge -->
+                <div class="flip-card-front bg-gradient-to-b from-navy-750 via-navy-750 to-indigo-900 text-white flex flex-col justify-between p-6">
+                  
+                  <div class="flex justify-between items-start border-b border-white/20 pb-3">
+                    <div class="text-left">
+                      <h5 class="text-xs font-black tracking-wide font-outfit uppercase">Sri Basaveswara</h5>
+                      <span class="text-[8px] uppercase tracking-widest text-indigo-200">School Estd 1978</span>
+                    </div>
+                    <div class="w-8 h-8 rounded bg-white flex items-center justify-center text-navy-750 font-bold text-sm">BS</div>
+                  </div>
+
+                  <!-- Badge Student Avatar Mock -->
+                  <div class="flex flex-col items-center my-4">
+                    <div class="w-24 h-24 rounded-full border-4 border-white/30 overflow-hidden bg-slate-200 flex items-center justify-center shadow-md">
+                      <i data-lucide="user" class="w-12 h-12 text-slate-600"></i>
+                    </div>
+                    <h3 id="badgeStudentName" class="text-lg font-black font-outfit mt-4 text-center">Master Abhishek Gowda</h3>
+                    <span class="px-3 py-0.5 rounded-full bg-emerald-500 text-[9px] font-black uppercase tracking-widest text-white mt-1.5">Student</span>
+                  </div>
+
+                  <!-- Student details -->
+                  <div class="grid grid-cols-2 gap-4 text-left border-t border-white/10 pt-3 text-[10px] text-indigo-100">
+                    <div>
+                      <p class="text-indigo-300 font-semibold uppercase">Student Roll</p>
+                      <p id="badgeRollNo" class="font-bold text-white text-xs mt-0.5">40001</p>
+                    </div>
+                    <div>
+                      <p class="text-indigo-300 font-semibold uppercase">Assigned Class</p>
+                      <p id="badgeClassSec" class="font-bold text-white text-xs mt-0.5">Class 10 - A</p>
+                    </div>
+                  </div>
+
+                  <div class="text-center text-[7px] text-indigo-300/80 tracking-widest uppercase">
+                    Sri Basaveswara ERP Identity System
+                  </div>
+                </div>
+
+                <!-- Back Side of ID Badge -->
+                <div class="flip-card-back bg-white border-2 border-slate-200 text-slate-800 flex flex-col justify-between p-6">
+                  
+                  <div class="text-center">
+                    <h5 class="text-xs font-black text-navy-750 font-outfit uppercase">Verification System</h5>
+                    <p class="text-[8px] text-slate-400 mt-0.5 uppercase tracking-wider">Scan QR code for authentic registry verification</p>
+                  </div>
+
+                  <!-- Dynamic QR code wrapper -->
+                  <div class="flex flex-col items-center my-6">
+                    <div class="w-36 h-36 bg-slate-50 border border-slate-100 p-2 rounded-xl flex items-center justify-center shadow-inner relative">
+                      <img id="badgeQrImg" class="w-full h-full object-contain" src="" alt="Badge QR Verification">
+                    </div>
+                    <span id="badgeSessionTokenHash" class="text-[7px] text-slate-400 mt-3 font-mono break-all max-w-[200px]">SHA256: HashSignature</span>
+                  </div>
+
+                  <!-- Registrar details -->
+                  <div class="border-t border-slate-100 pt-3 text-center">
+                    <p class="text-[9px] font-bold text-slate-700">Sri Basaveswara School Registrar</p>
+                    <span class="text-[7px] text-emerald-500 font-bold uppercase tracking-wider">Authorized Digitally</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Tab Notice Board (Announcements & Events Agenda) -->
+          <div id="tabNoticeBoard" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <div class="flex justify-between items-center mb-6">
+                <div>
+                  <h4 class="text-lg font-black font-outfit text-slate-900">Official Notice Board</h4>
+                  <p class="text-xs text-slate-500">Live circular notifications & campus agendas dispatched by administrators</p>
+                </div>
+                <span class="px-3 py-1 rounded bg-navy-750 text-white font-bold text-[9px] uppercase tracking-wider">BOARD SYNCHRONIZED</span>
+              </div>
+              
+              <!-- Split Notice & Calendar Layout -->
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Circulars Column -->
+                <div class="md:col-span-8 space-y-4" id="noticeBoardList">
+                  <!-- Dynamic circulars list -->
+                </div>
+                
+                <!-- Events Sidebar Agenda Column -->
+                <div class="md:col-span-4 space-y-4 border-l border-slate-100 pl-0 md:pl-6">
+                  <h5 class="text-xs font-black uppercase text-slate-400 tracking-wider">Academic Events Agenda</h5>
+                  <div class="space-y-3">
+                    <div class="p-3 bg-indigo-50/50 rounded-xl border border-indigo-100/50 flex gap-3 text-xs">
+                      <div class="text-center shrink-0 w-10">
+                        <p class="font-extrabold text-navy-750 font-outfit">28</p>
+                        <p class="text-[9px] uppercase text-indigo-400 font-bold">May</p>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Parent-Teacher Meet</p>
+                        <p class="text-[10px] text-slate-400">Class 10 Scorecard Triage</p>
+                      </div>
+                    </div>
+                    
+                    <div class="p-3 bg-amber-50/50 rounded-xl border border-amber-100/50 flex gap-3 text-xs">
+                      <div class="text-center shrink-0 w-10">
+                        <p class="font-extrabold text-amber-600 font-outfit">01</p>
+                        <p class="text-[9px] uppercase text-amber-400 font-bold">Jun</p>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Summer Syllabus Kickoff</p>
+                        <p class="text-[10px] text-slate-400">Annual Academic Session</p>
+                      </div>
+                    </div>
+
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-150 flex gap-3 text-xs">
+                      <div class="text-center shrink-0 w-10">
+                        <p class="font-extrabold text-slate-600 font-outfit">15</p>
+                        <p class="text-[9px] uppercase text-slate-400 font-bold">Jun</p>
+                      </div>
+                      <div>
+                        <p class="font-bold text-slate-800">Mid-Term Certifications</p>
+                        <p class="text-[10px] text-slate-400">Report Cards Finalization</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Homework (Daily Tracker list) -->
+          <div id="tabHomework" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <div class="flex justify-between items-center mb-6">
+                <div>
+                  <h4 class="text-lg font-black font-outfit text-slate-900">Daily Homework Trackers</h4>
+                  <p class="text-xs text-slate-500">Academic task assignments issued by subject teachers</p>
+                </div>
+                <span id="hwCompletionBadge" class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">0 Completed Tasks</span>
+              </div>
+              <div class="space-y-4" id="homeworkRosterList">
+                <!-- Dynamic Homework list -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Library checkouts catalog -->
+          <div id="tabLibrary" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <div class="flex justify-between items-center mb-6">
+                <div>
+                  <h4 class="text-lg font-black font-outfit text-slate-900">Library Active Checkouts</h4>
+                  <p class="text-xs text-slate-500">Track currently checked-out campus literature and return dates</p>
+                </div>
+                <span class="px-3 py-1 rounded bg-violet-50 text-violet-600 border border-violet-100 font-bold text-[9px] uppercase tracking-wider">LITERARY DEPOSIT ACTIVE</span>
+              </div>
+              <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150 text-center">
+                      <th class="py-3 px-4 text-left">Record ID</th>
+                      <th class="py-3 px-4 text-left">Book Title</th>
+                      <th class="py-3 px-4 text-left">Author Name</th>
+                      <th class="py-3 px-4">Checkout Date</th>
+                      <th class="py-3 px-4">Return Target Date</th>
+                      <th class="py-3 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="libraryCheckoutsTableBody" class="divide-y divide-slate-100 text-slate-700 text-center">
+                    <!-- Dynamic Library checkouts -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Timetable (Class Weekly Schedule) -->
+          <div id="tabTimetable" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Class Weekly Timetable</h3>
+                <p class="text-xs text-slate-500 mt-1">Review your weekly schedule of 6 daily subject periods (Monday to Saturday).</p>
+              </div>
+              <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-inner overflow-x-auto">
+                <table class="w-full text-center text-xs border-collapse min-w-[600px]">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200">
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Day</th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 1<br><span class="text-[9px] text-slate-400 font-normal">09:00 - 10:00</span></th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 2<br><span class="text-[9px] text-slate-400 font-normal">10:00 - 11:00</span></th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 3<br><span class="text-[9px] text-slate-400 font-normal">11:15 - 12:15</span></th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 4<br><span class="text-[9px] text-slate-400 font-normal">12:15 - 01:15</span></th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 5<br><span class="text-[9px] text-slate-400 font-normal">02:00 - 02:45</span></th>
+                      <th class="py-3 px-2 font-bold">Period 6<br><span class="text-[9px] text-slate-400 font-normal">02:45 - 03:30</span></th>
+                    </tr>
+                  </thead>
+                  <tbody id="timetableGridBody" class="divide-y divide-slate-200 font-medium text-slate-700">
+                    <!-- Dynamic Timetable Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Attendance Calendar -->
+          <div id="tabAttendanceCalendar" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Detailed Daily Attendance Calendar</h3>
+                <p class="text-xs text-slate-500 mt-1">Audit daily present/absent statuses color-coded for the current calendar month.</p>
+              </div>
+              
+              <!-- Legend indicator -->
+              <div class="flex items-center gap-4 text-xs font-bold text-slate-500 bg-slate-50 p-4 border border-slate-100 rounded-xl">
+                <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block shadow-sm"></span> Present</span>
+                <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-rose-500 inline-block shadow-sm"></span> Absent</span>
+                <span class="flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded-full bg-slate-250 inline-block shadow-sm"></span> No Class / Weekend</span>
+              </div>
+
+              <!-- Calendar Grid Container -->
+              <div class="max-w-md mx-auto space-y-4">
+                <div class="flex justify-between items-center px-2">
+                  <h4 id="calendarMonthLabel" class="text-sm font-black text-slate-800 font-outfit uppercase tracking-wider">May 2026</h4>
+                </div>
+                <div class="grid grid-cols-7 gap-2 text-center text-slate-400 text-[10px] font-black tracking-widest uppercase mb-1">
+                  <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                </div>
+                <div id="attendanceCalendarGrid" class="grid grid-cols-7 gap-2.5">
+                  <!-- Dynamic Days -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Transport (Campus Logistics) -->
+          <div id="tabTransport" class="tab-content space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <div>
+                  <h3 class="text-xl font-black font-outfit text-slate-900">Campus Transport Logistics</h3>
+                  <p class="text-xs text-slate-500 mt-1">Review operational school bus routes, driver details, and schedules.</p>
+                </div>
+                <button onclick="switchTab('tabSupport'); document.getElementById('ticketCategory').value='Transport Desk';" class="px-4 py-2 border border-navy-750 text-navy-750 font-bold text-xs rounded-xl hover:bg-navy-50 flex items-center gap-1.5 shadow-sm">
+                  <i data-lucide="route" class="w-4 h-4"></i> Request Change
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="transportListContainer">
+                <!-- Dynamic Bus Cards -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Support Tickets desk -->
+          <div id="tabSupport" class="tab-content space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+              <!-- Submit ticket Form -->
+              <div class="md:col-span-5 bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-4">
+                <div>
+                  <h4 class="text-base font-black font-outfit text-slate-900">File Support Query</h4>
+                  <p class="text-xs text-slate-500">Submit official help queries or route requests to school staff</p>
+                </div>
+                <form id="supportTicketForm" class="space-y-4" onsubmit="handleSupportTicketSubmit(event)">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Ticket Category</label>
+                    <select id="ticketCategory" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:outline-none focus:border-navy-750" required>
+                      <option value="Transport Desk">Transport Desk (Route Adjustment)</option>
+                      <option value="Tuition Fee Desk">Tuition Fee Ledger Queries</option>
+                      <option value="Academic Score Desk">Academic Score Clarifications</option>
+                      <option value="General Registry Query">General Registry Query</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject Title</label>
+                    <input type="text" id="ticketTitle" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:outline-none focus:border-navy-750" placeholder="e.g. Science Lab Marks correction request" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Full Query Details</label>
+                    <textarea id="ticketDetails" rows="4" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:outline-none focus:border-navy-750 font-semibold" placeholder="Please describe query fully..." required></textarea>
+                  </div>
+                  <button type="submit" class="w-full py-3.5 btn-navy uppercase font-bold text-xs tracking-wider rounded-xl shadow-md">
+                    SUBMIT TICKET REQUEST
+                  </button>
+                </form>
+              </div>
+              
+              <!-- Active tickets states -->
+              <div class="md:col-span-7 bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6">
+                <h4 class="text-base font-black font-outfit text-slate-900 mb-4">Support Tickets History</h4>
+                <div class="space-y-4 max-h-[360px] overflow-y-auto pr-2" id="supportTicketsList">
+                  <!-- Dynamic Support tickets -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom micro footer -->
+  <footer class="w-full py-4 text-center text-[10px] text-slate-400 border-t border-slate-100 bg-white">
+    <p>&copy; 2026 Sri Basaveswara School Management Board. Registered SaaS Node Network.</p>
+  </footer>
+
+  <!-- Script Modules -->
+  <script>
+    const API_URL = "http://localhost:5000/api";
+    let currentUser = null;
+    let currentToken = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      
+      // Auto session restore check
+      const savedToken = localStorage.getItem("parentlink_session_token");
+      const savedUser = localStorage.getItem("parentlink_user_info");
+      
+      if (savedToken && savedUser) {
+        currentToken = savedToken;
+        currentUser = JSON.parse(savedUser);
+        loadDashboard();
+      }
+    });
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `px-4 py-3 rounded-xl shadow-lg border text-xs font-bold flex items-center gap-2 transform translate-y-2 opacity-0 transition-all duration-300 ${
+        type === 'success' 
+          ? 'bg-emerald-50 border-emerald-100 text-emerald-700' 
+          : 'bg-rose-50 border-rose-100 text-rose-700'
+      }`;
+      
+      const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      
+      lucide.createIcons();
+      
+      // Trigger animations
+      setTimeout(() => {
+        toast.classList.remove("translate-y-2", "opacity-0");
+      }, 50);
+      
+      // Destroy
+      setTimeout(() => {
+        toast.classList.add("translate-y-2", "opacity-0");
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.setAttribute("data-lucide", "eye-off");
+      } else {
+        input.type = "password";
+        icon.setAttribute("data-lucide", "eye");
+      }
+      lucide.createIcons();
+    }
+
+    function switchView(viewId) {
+      document.getElementById("loginView").classList.add("hidden");
+      document.getElementById("signupView").classList.add("hidden");
+      document.getElementById("dashboardView").classList.add("hidden");
+      if (document.getElementById("resetPwView")) document.getElementById("resetPwView").classList.add("hidden");
+      
+      document.getElementById(viewId).classList.remove("hidden");
+    }
+
+    function toggleBadgeFlip() {
+      document.getElementById("idFlipCard").classList.toggle("flipped");
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle("dark");
+    }
+
+    // --- DASHBOARD NAVIGATION TAB TRIAGE ---
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      document.getElementById(tabId).classList.remove("hidden");
+      
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("bg-navy-750", "text-white");
+        btn.classList.add("text-slate-600", "hover:bg-slate-100");
+      });
+      
+      // Select corresponding navigation tab button active
+      let buttonId = "btn" + tabId.charAt(0).toUpperCase() + tabId.slice(1);
+      const btn = document.getElementById(buttonId);
+      if (btn) {
+        btn.classList.remove("text-slate-600", "hover:bg-slate-100");
+        btn.classList.add("bg-navy-750", "text-white");
+      }
+    }
+
+    // --- API HANDLERS ---
+    
+    // Login Auth call
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          // Double check if account is student. Student Parentlink ONLY handles student roles.
+          if (data.user.role !== "Student") {
+            showToast("This portal is dedicated only to Students & Parents. Teachers/Admins must login to academics portal.", "error");
+            return;
+          }
+          
+          currentToken = data.sessionToken;
+          currentUser = data.user;
+          
+          localStorage.setItem("parentlink_session_token", currentToken);
+          localStorage.setItem("parentlink_user_info", JSON.stringify(currentUser));
+          
+          if (currentUser.tempPasswordActive) {
+            switchView("resetPwView");
+            return;
+          }
+          
+          showToast(`Logged in successfully! Welcome, ${currentUser.name}.`);
+          loadDashboard();
+        } else {
+          showToast(data.message || "Failed to authentic entry.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        // Offline Fallback Mock for Demo Resilience
+        console.warn("API Server connection offline. Initializing offline mock pipeline.");
+        triggerOfflineMockLogin(email, password);
+      }
+    }
+
+    // Password forced rotation handler
+    async function handleTempPasswordReset(event) {
+      event.preventDefault();
+      const newPassword = document.getElementById("resetPasswordInput").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/reset-temp`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: currentUser.email, newPassword })
+        });
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          showToast("Security reset successful! You can now log into your ParentLink portal.", "success");
+          
+          // Require signing in using custom secure password
+          switchView("loginView");
+        } else {
+          showToast(data.message || "Reset failed.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Offline Reset: Credentials rotated.", "success");
+        switchView("loginView");
+      }
+    }
+
+
+    // Signup submission trigger
+    async function handleSignup(event) {
+      event.preventDefault();
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const classAssigned = document.getElementById("signupClass").value;
+      const sectionAssigned = document.getElementById("signupSection").value;
+      const password = document.getElementById("signupPassword").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, role: "Student", classAssigned, sectionAssigned, password })
+        });
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          showToast("Admission signup submitted! Pending Super Admin approval.", "success");
+          switchView("loginView");
+        } else {
+          showToast(data.message || "Error submitting signup.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Server offline. Mock admission request received successfully.", "success");
+        switchView("loginView");
+      }
+    }
+
+    // Abortable fetch with custom timeout limit
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 45000 } = options;
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal
+      });
+      clearTimeout(id);
+      return response;
+    }
+
+    // Load Student Dashboard data points
+    async function loadDashboard() {
+      switchView("dashboardView");
+      
+      // Update basic fields
+      document.getElementById("displayStudentName").innerText = currentUser.name;
+      document.getElementById("displayRollNumber").innerText = currentUser.rollNumber || "TBD";
+      document.getElementById("displayClassAssigned").innerText = `${currentUser.classAssigned} - ${currentUser.sectionAssigned}`;
+      
+      document.getElementById("badgeStudentName").innerText = currentUser.name;
+      document.getElementById("badgeRollNo").innerText = currentUser.rollNumber || "TBD";
+      document.getElementById("badgeClassSec").innerText = `${currentUser.classAssigned} - ${currentUser.sectionAssigned}`;
+      document.getElementById("badgeSessionTokenHash").innerText = `SIGNATURE: ${currentToken.substring(0, 16)}...`;
+      
+      const badgeQrData = `Sri Basaveswara School ERP\nVerification: STUDENT ID BADGE\nStudent Name: ${currentUser.name}\nRoll Number: ${currentUser.rollNumber || "40001"}\nSignature Hash: SBS-SEC-${currentToken.substring(0, 24)}`;
+      document.getElementById("badgeQrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(badgeQrData)}`;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        // Retry connection up to 3 times to allow cold start server wakes
+        let response = null;
+        let attempt = 0;
+        const maxAttempts = 3;
+        
+        while (attempt < maxAttempts) {
+          try {
+            attempt++;
+            console.log(`Connection attempt ${attempt}...`);
+            response = await fetchWithTimeout(`${API_URL}/student/dashboard`, {
+              method: "POST",
+              headers: { 
+                "Content-Type": "application/json",
+                "Authorization": currentToken
+              },
+              timeout: 15000 // 15s per attempt, total 45s
+            });
+            break; // Success!
+          } catch (fetchErr) {
+            if (attempt >= maxAttempts) throw fetchErr;
+            // Wait 2s before retry
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          renderGrades(data.grades);
+          renderFees(data.fees);
+          renderAttendance(data.attendance);
+          renderHomework(data.homework || []);
+          renderLibrary(data.library || []);
+          
+          // Async load notice boards & tickets
+          loadAnnouncementsList();
+          loadSupportTicketsList();
+
+          // Fetch Timetable dynamically
+          fetch(`${API_URL}/timetable?className=${encodeURIComponent(currentUser.classAssigned)}&sectionName=${encodeURIComponent(currentUser.sectionAssigned)}`, {
+            headers: { "Authorization": currentToken }
+          })
+            .then(res => res.json())
+            .then(ttData => { if (ttData.status === "success") renderTimetable(ttData.timetable); })
+            .catch(e => console.error("Timetable load error:", e));
+
+          // Fetch Daily Attendance Calendar
+          fetch(`${API_URL}/attendance`, {
+            headers: { "Authorization": currentToken }
+          })
+            .then(res => res.json())
+            .then(attData => { if (attData.status === "success") renderDetailedAttendanceCalendar(attData.dailyAttendance); })
+            .catch(e => console.error("Detailed attendance load error:", e));
+
+          // Fetch Transport Routes
+          fetch(`${API_URL}/transport`, {
+            headers: { "Authorization": currentToken }
+          })
+            .then(res => res.json())
+            .then(transData => { if (transData.status === "success") renderTransport(transData.transport); })
+            .catch(e => console.error("Transport load error:", e));
+
+        } else {
+          showToast(data.message || "Failed to load dashboard data.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        // Server offline - render offline fallback details
+        renderOfflineMockData();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("parentlink_session_token");
+      localStorage.removeItem("parentlink_user_info");
+      currentToken = null;
+      currentUser = null;
+      switchView("loginView");
+      showToast("Signed out successfully.");
+    }
+
+    // --- HTML RENDER DOM CONSTRUCTORS ---
+    
+    function renderGrades(grades) {
+      const container = document.getElementById("gradesTableBody");
+      container.innerHTML = "";
+      
+      document.getElementById("statSubjectCount").innerText = `${grades.length} Subjects`;
+      
+      // Clear and draw performance progress bars in analytics chart
+      const chartBars = document.getElementById("gradesChartBars");
+      chartBars.innerHTML = "";
+      
+      if (!grades || grades.length === 0) {
+        container.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">No approved academic exam marks found. Check back later.</td></tr>`;
+        chartBars.innerHTML = `<p class="text-xs text-slate-400 italic">No grade points logged to draw visual analytics chart.</p>`;
+        return;
+      }
+      
+      grades.forEach(g => {
+        const pct = ((g.marks / g.maxMarks) * 100).toFixed(1);
+        
+        let gradeColor = "text-rose-600 bg-rose-50 border-rose-100";
+        if (g.grade.includes("A") || g.grade.includes("B")) gradeColor = "text-emerald-700 bg-emerald-50 border-emerald-100";
+        else if (g.grade.includes("C") || g.grade.includes("D")) gradeColor = "text-amber-700 bg-amber-50 border-amber-100";
+        
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50/50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3.5 px-4 font-bold text-slate-800">${g.subject}</td>
+          <td class="py-3.5 px-4 text-slate-500 font-semibold">${g.examSession}</td>
+          <td class="py-3.5 px-4 text-center font-extrabold text-navy-750">${g.marks}</td>
+          <td class="py-3.5 px-4 text-center text-slate-400">${g.maxMarks}</td>
+          <td class="py-3.5 px-4 text-center text-slate-600 font-bold">${pct}%</td>
+          <td class="py-3.5 px-4 text-center">
+            <span class="px-2 py-0.5 text-[10px] font-black border rounded-full ${gradeColor}">${g.grade}</span>
+          </td>
+        `;
+        container.appendChild(tr);
+        
+        // Draw progress bar natively in tailwind
+        const barDiv = document.createElement("div");
+        barDiv.className = "space-y-1 text-left";
+        barDiv.innerHTML = `
+          <div class="flex justify-between text-[11px] font-bold text-slate-700">
+            <span>${g.subject} (${g.examSession})</span>
+            <span>Score: ${g.marks} / ${g.maxMarks} (${pct}%)</span>
+          </div>
+          <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+            <div class="bg-navy-750 h-full rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+          </div>
+        `;
+        chartBars.appendChild(barDiv);
+      });
+    }
+
+    function renderFees(feeData) {
+      const unpaid = feeData.totalDue - feeData.paidAmount;
+      
+      document.getElementById("statFeesDue").innerText = `INR ${unpaid.toLocaleString()}`;
+      document.getElementById("feeInvoiceVal").innerText = `INR ${feeData.totalDue.toLocaleString()}.00`;
+      document.getElementById("feePaidVal").innerText = `INR ${feeData.paidAmount.toLocaleString()}.00`;
+      document.getElementById("feeDueVal").innerText = `INR ${unpaid.toLocaleString()}.00`;
+      
+      if (unpaid <= 0) {
+        document.getElementById("feeDueVal").className = "font-black text-emerald-600 text-sm";
+        document.getElementById("feeDueVal").innerText = "FULL PAID 🎉";
+      } else {
+        document.getElementById("feeDueVal").className = "font-black text-rose-600 text-sm animate-pulse";
+      }
+
+      // Render payment ledger transactions
+      const receiptsContainer = document.getElementById("feeReceiptsList");
+      receiptsContainer.innerHTML = "";
+      
+      if (!feeData.history || feeData.history.length === 0) {
+        receiptsContainer.innerHTML = `<div class="py-8 text-center text-xs text-slate-400">No payment transaction records registered.</div>`;
+        return;
+      }
+      
+      feeData.history.reverse().forEach(h => {
+        const item = document.createElement("div");
+        item.className = "p-3 border border-slate-100 rounded-xl bg-slate-50/50 flex flex-col gap-1 text-[11px] text-slate-600 hover:border-navy-750/30 cursor-pointer transition-colors";
+        const encodedReceipt = encodeURIComponent(JSON.stringify(h));
+        item.setAttribute("onclick", `openInvoiceModal('${encodedReceipt}')`);
+        item.setAttribute("title", "Click to print official certified invoice statement");
+        item.innerHTML = `
+          <div class="flex justify-between font-bold text-slate-800">
+            <span class="flex items-center gap-1"><i data-lucide="printer" class="w-3.5 h-3.5 text-navy-750"></i> UPI Receipt Payment</span>
+            <span class="text-emerald-600">+ INR ${h.amount.toLocaleString()}</span>
+          </div>
+          <div class="flex justify-between text-[9px] text-slate-400 mt-1">
+            <span>Reference: ${h.reference}</span>
+            <span>${new Date(h.timestamp).toLocaleDateString()}</span>
+          </div>
+        `;
+        receiptsContainer.appendChild(item);
+      });
+      lucide.createIcons();
+    }
+
+    function renderAttendance(attendanceList) {
+      if (!attendanceList || attendanceList.length === 0) return;
+      
+      // Use last month attendance statistic
+      const latest = attendanceList[attendanceList.length - 1];
+      const percent = Math.round((latest.presentDays / latest.totalDays) * 100);
+      
+      document.getElementById("attStatsText").innerText = `${latest.presentDays} / ${latest.totalDays} Days`;
+      document.getElementById("attPercentage").innerText = `${percent}%`;
+      
+      // Dynamic circular dashboard ring offset
+      const circle = document.getElementById("attProgressCircle");
+      const radius = 34;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference - (percent / 100) * circumference;
+      circle.style.strokeDasharray = `${circumference}`;
+      circle.style.strokeDashoffset = `${offset}`;
+    }
+
+    function renderTimetable(timetableData) {
+      const body = document.getElementById("timetableGridBody");
+      body.innerHTML = "";
+      const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      
+      days.forEach(day => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 border-b border-slate-200";
+        let html = `<td class="py-3 px-2 border-r border-slate-200 font-black bg-slate-50 text-slate-650 w-24">${day}</td>`;
+        
+        for (let p = 1; p <= 6; p++) {
+          const t = timetableData.find(x => x.day === day && x.period === p);
+          if (t) {
+            html += `<td class="py-3.5 px-2 border-r border-slate-200">
+              <div class="font-black text-slate-800 text-[11px]">${t.subject}</div>
+              <div class="text-[9px] text-slate-400 font-semibold">${t.teacher}</div>
+            </td>`;
+          } else {
+            html += `<td class="py-3.5 px-2 border-r border-slate-200 text-slate-350 text-[10px] italic">Free Period</td>`;
+          }
+        }
+        tr.innerHTML = html;
+        body.appendChild(tr);
+      });
+    }
+
+    function renderDetailedAttendanceCalendar(logs) {
+      const grid = document.getElementById("attendanceCalendarGrid");
+      grid.innerHTML = "";
+      
+      const daysInMonth = 31;
+      const startDayOffset = 5; // May 1st 2026 is a Friday (Sun=0, Mon=1... Fri=5)
+      
+      document.getElementById("calendarMonthLabel").innerText = "May 2026";
+      
+      for (let i = 0; i < startDayOffset; i++) {
+        const pad = document.createElement("div");
+        pad.className = "aspect-square";
+        grid.appendChild(pad);
+      }
+      
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "aspect-square rounded-xl flex flex-col items-center justify-center text-xs font-black relative cursor-default border transition-all";
+        
+        const dateStr = `2026-05-${String(d).padStart(2, '0')}`;
+        const dayOfWeek = (startDayOffset + d - 1) % 7;
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        
+        const record = logs.find(l => l.date === dateStr);
+        
+        dayDiv.innerHTML = `<span>${d}</span>`;
+        
+        if (record) {
+          if (record.status === "Present") {
+            dayDiv.className += " bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100";
+            dayDiv.title = `Present (Marked by ${record.recordedBy})`;
+          } else {
+            dayDiv.className += " bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100 animate-pulse";
+            dayDiv.title = `Absent (Marked by ${record.recordedBy})`;
+          }
+        } else if (isWeekend) {
+          dayDiv.className += " bg-slate-100 border-slate-200 text-slate-400";
+          dayDiv.title = "Weekend / Non-Academic Day";
+        } else {
+          dayDiv.className += " bg-white border-slate-200 text-slate-550 hover:bg-slate-50";
+          dayDiv.title = "No Attendance Record Logged";
+        }
+        
+        grid.appendChild(dayDiv);
+      }
+    }
+
+    function renderTransport(transportList) {
+      const container = document.getElementById("transportListContainer");
+      container.innerHTML = "";
+      
+      if (!transportList || transportList.length === 0) {
+        container.innerHTML = `<div class="py-8 text-center text-slate-400 font-bold text-xs">No active transport routes registered.</div>`;
+        return;
+      }
+      
+      transportList.forEach(bus => {
+        const card = document.createElement("div");
+        card.className = "bg-slate-50 border border-slate-100 p-5 rounded-2xl space-y-4 shadow-sm hover:shadow-md transition-shadow";
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-[9px] font-black uppercase tracking-wider">${bus.vehicleNum}</span>
+              <h4 class="text-sm font-black font-outfit text-slate-800 mt-2">${bus.routeName}</h4>
+            </div>
+            <span class="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-100"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping"></span> ON TIME</span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 text-[10px] border-t border-b border-slate-200/60 py-3">
+            <div>
+              <span class="text-slate-400 font-bold uppercase block tracking-wider">Morning Pickup</span>
+              <strong class="text-slate-700 font-extrabold mt-0.5 block">${bus.pickupTime}</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 font-bold uppercase block tracking-wider">Evening Drop</span>
+              <strong class="text-slate-700 font-extrabold mt-0.5 block">${bus.dropTime}</strong>
+            </div>
+          </div>
+          
+          <div class="flex justify-between items-center bg-white border border-slate-100 p-3 rounded-xl shadow-inner">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs"><i data-lucide="user" class="w-4 h-4"></i></div>
+              <div>
+                <span class="text-[9px] text-slate-400 font-bold block uppercase tracking-wider">Driver Profile</span>
+                <strong class="text-xs text-slate-700 font-black">${bus.driverName}</strong>
+              </div>
+            </div>
+            <a href="tel:${bus.driverPhone.replace(/\s+/g, '')}" class="px-3 py-1.5 bg-navy-750 text-white rounded-lg text-[10px] font-black flex items-center gap-1 hover:bg-navy-900 transition-colors shadow-sm">
+              <i data-lucide="phone" class="w-3 h-3"></i> Call Driver
+            </a>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // --- NOTICE BOARD ANNOUNCEMENTS ---
+    async function loadAnnouncementsList() {
+      try {
+        const res = await fetch(`${API_URL}/announcements`);
+        const data = await res.json();
+        if (data.status === "success") {
+          renderNoticeBoard(data.announcements);
+        }
+      } catch (err) {
+        console.warn("Offline announcements fallback.");
+        renderNoticeBoard([
+          { announcementId: "ANN-1001", title: "🏫 Dynamic ERP Portal Activation", content: "Official notification: Sri Basaveswara School Management Board has successfully activated the hybrid Node.js credentials system. Parents can access live invoice transcripts.", timestamp: new Date().toISOString(), author: "adhibasavanal@gmail.com" }
+        ]);
+      }
+    }
+
+    function renderNoticeBoard(announcements) {
+      const container = document.getElementById("noticeBoardList");
+      container.innerHTML = "";
+      
+      if (!announcements || announcements.length === 0) {
+        container.innerHTML = `<div class="py-8 text-center text-slate-400 font-bold text-xs">No active notices posted on circular boards.</div>`;
+        return;
+      }
+      
+      announcements.forEach(ann => {
+        const item = document.createElement("div");
+        item.className = "p-5 border border-slate-100 rounded-2xl bg-slate-50/50 space-y-2 relative overflow-hidden transition-all hover:border-indigo-150 hover:bg-indigo-50/5 hover:scale-[1.01]";
+        item.innerHTML = `
+          <div class="flex justify-between items-start flex-wrap gap-2">
+            <h5 class="font-extrabold text-sm text-slate-900 font-outfit text-left">${ann.title}</h5>
+            <span class="text-[9px] font-bold text-slate-400 shrink-0">${new Date(ann.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed font-semibold whitespace-pre-wrap text-left">${ann.content}</p>
+          <div class="flex justify-between items-center text-[9px] text-slate-400 pt-1 border-t border-slate-100/50">
+            <span>Official circular</span>
+            <span>By: <strong class="text-navy-750 font-bold">${ann.author}</strong></span>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // --- DAILY HOMEWORK TRACKERS ---
+    function renderHomework(homework) {
+      const container = document.getElementById("homeworkRosterList");
+      container.innerHTML = "";
+      
+      if (!homework || homework.length === 0) {
+        container.innerHTML = `<div class="py-8 text-center text-slate-400 font-bold text-xs">No daily homework tasks assigned. Well done! 🎉</div>`;
+        document.getElementById("hwCompletionBadge").innerText = "0 Assigned Tasks";
+        return;
+      }
+      
+      const doneKeys = JSON.parse(localStorage.getItem(`hw_done_${currentUser.rollNumber}`)) || {};
+      let doneCount = 0;
+      
+      homework.forEach(hw => {
+        const isDone = doneKeys[hw.homeworkId] === true;
+        if (isDone) doneCount++;
+        
+        const item = document.createElement("div");
+        item.className = `p-4 border rounded-2xl flex justify-between items-center gap-4 transition-all ${
+          isDone ? 'bg-emerald-50/30 border-emerald-150 text-slate-500' : 'bg-slate-50/50 border-slate-100'
+        }`;
+        
+        item.innerHTML = `
+          <div class="space-y-1.5 text-left flex-grow">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2 py-0.5 rounded bg-navy-750 text-white text-[9px] font-black uppercase tracking-wider">${hw.subject}</span>
+              <span class="text-[10px] text-slate-400 font-bold">Due Date: ${new Date(hw.dueDate).toLocaleDateString()}</span>
+            </div>
+            <p class="text-xs font-semibold leading-relaxed ${isDone ? 'line-through text-slate-400' : 'text-slate-800'}">${hw.taskDetails}</p>
+            <p class="text-[9px] text-slate-400">Assigned by Teacher: <strong class="text-slate-600">${hw.assignedBy}</strong></p>
+          </div>
+          <div class="shrink-0 flex items-center">
+            <label class="relative flex items-center cursor-pointer">
+              <input type="checkbox" onchange="toggleHomeworkDone('${hw.homeworkId}')" ${isDone ? 'checked' : ''} class="w-5 h-5 rounded-lg border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-500">
+            </label>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+      
+      document.getElementById("hwCompletionBadge").innerText = `${doneCount} / ${homework.length} Completed`;
+      document.getElementById("hwCompletionBadge").className = `px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+        doneCount === homework.length ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+      }`;
+    }
+
+    function toggleHomeworkDone(hwId) {
+      const storageKey = `hw_done_${currentUser.rollNumber}`;
+      const doneKeys = JSON.parse(localStorage.getItem(storageKey)) || {};
+      doneKeys[hwId] = !doneKeys[hwId];
+      localStorage.setItem(storageKey, JSON.stringify(doneKeys));
+      
+      loadDashboard();
+      showToast("Homework task progress updated!");
+    }
+
+    // --- LIBRARY CHECKOUTS ---
+    function renderLibrary(library) {
+      const container = document.getElementById("libraryCheckoutsTableBody");
+      container.innerHTML = "";
+      
+      if (!library || library.length === 0) {
+        container.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400 font-bold">No active library checkout records.</td></tr>`;
+        return;
+      }
+      
+      library.forEach(lib => {
+        let statusBadge = `<span class="px-2 py-0.5 text-[9px] font-black rounded-full bg-rose-50 text-rose-600 border border-rose-100 animate-pulse">CHECKED OUT</span>`;
+        if (lib.status === "RETURNED") {
+          statusBadge = `<span class="px-2 py-0.5 text-[9px] font-black rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">RETURNED</span>`;
+        }
+        
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-indigo-900">${lib.recordId}</td>
+          <td class="py-3 px-4 font-bold text-slate-800 text-left">${lib.bookTitle}</td>
+          <td class="py-3 px-4 text-slate-500 font-semibold text-left">${lib.author}</td>
+          <td class="py-3 px-4 text-slate-400 font-bold">${new Date(lib.checkoutDate).toLocaleDateString()}</td>
+          <td class="py-3 px-4 font-extrabold text-slate-600">${lib.returnDate ? new Date(lib.returnDate).toLocaleDateString() : 'Active Checkout'}</td>
+          <td class="py-3 px-4 text-center">${statusBadge}</td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    // --- PARENT HELPDESK TICKETS ---
+    async function loadSupportTicketsList() {
+      try {
+        const res = await fetch(`${API_URL}/support/ticket/list`, { headers: { "Authorization": currentToken } });
+        const data = await res.json();
+        if (data.status === "success") {
+          renderSupportTickets(data.tickets);
+        }
+      } catch (err) {
+        console.warn("Offline ticket queue query fallback.");
+        renderSupportTickets(mockTickets);
+      }
+    }
+
+    function renderSupportTickets(tickets) {
+      const container = document.getElementById("supportTicketsList");
+      container.innerHTML = "";
+      
+      if (!tickets || tickets.length === 0) {
+        container.innerHTML = `<div class="py-12 text-center text-xs text-slate-400 font-bold">No active support ticket records cataloged.</div>`;
+        return;
+      }
+      
+      tickets.forEach(t => {
+        let statusBadge = `<span class="px-2 py-0.5 text-[9px] font-black rounded-full bg-amber-50 text-amber-700 border border-amber-100 animate-pulse shrink-0">PENDING</span>`;
+        if (t.status === "RESOLVED") {
+          statusBadge = `<span class="px-2 py-0.5 text-[9px] font-black rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 shrink-0">RESOLVED</span>`;
+        }
+        
+        const item = document.createElement("div");
+        item.className = "p-4 border border-slate-100 rounded-2xl bg-slate-50/50 flex flex-col gap-2 text-xs relative overflow-hidden transition-all hover:border-indigo-150 hover:bg-indigo-50/5";
+        
+        let replyHTML = "";
+        if (t.status === "RESOLVED") {
+          replyHTML = `
+            <div class="mt-2 p-3 bg-white rounded-xl border border-slate-150 space-y-1">
+              <p class="text-[8px] font-black text-emerald-600 uppercase tracking-widest flex items-center gap-1"><i data-lucide="check-circle" class="w-3 h-3"></i> Resolved Resolution Reply:</p>
+              <p class="text-[11px] font-bold text-slate-700 leading-relaxed">"${t.reply}"</p>
+              <p class="text-[8px] text-slate-400 mt-1">Resolved at ${t.resolvedAt ? new Date(t.resolvedAt).toLocaleDateString() : 'N/A'} by ${t.resolvedBy || 'staff'}</p>
+            </div>
+          `;
+        } else {
+          replyHTML = `
+            <div class="mt-1 flex items-center gap-1.5 text-[10px] text-slate-400 font-semibold bg-white p-2 border border-slate-100 rounded-xl">
+              <i data-lucide="clock" class="w-3.5 h-3.5 animate-spin text-amber-500"></i> Queued for Clerk / Admin resolution checkup.
+            </div>
+          `;
+        }
+        
+        item.innerHTML = `
+          <div class="flex justify-between items-start gap-3">
+            <div class="text-left">
+              <span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 font-black text-[9px] uppercase tracking-wider">${t.category}</span>
+              <h5 class="font-extrabold text-sm text-slate-900 mt-1 font-outfit text-left">${t.title}</h5>
+            </div>
+            ${statusBadge}
+          </div>
+          <p class="text-xs text-slate-500 font-semibold leading-relaxed text-left">${t.details}</p>
+          <div class="text-[8px] text-slate-400 flex justify-between pt-1 border-t border-slate-100/50">
+            <span>Ticket ID: <strong>${t.ticketId}</strong></span>
+            <span>Submitted: ${new Date(t.timestamp).toLocaleDateString()}</span>
+          </div>
+          ${replyHTML}
+        `;
+        container.appendChild(item);
+      });
+      lucide.createIcons();
+    }
+
+    async function handleSupportTicketSubmit(event) {
+      event.preventDefault();
+      const category = document.getElementById("ticketCategory").value;
+      const title = document.getElementById("ticketTitle").value.trim();
+      const details = document.getElementById("ticketDetails").value.trim();
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const res = await fetch(`${API_URL}/support/ticket`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ category, title, details })
+        });
+        const data = await res.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast("Helpdesk ticket queued successfully!");
+          document.getElementById("supportTicketForm").reset();
+          loadSupportTicketsList();
+        } else {
+          showToast(data.message || "Failed to submit query.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        // Simulated offline ticket submission
+        const newTicket = {
+          ticketId: "TCK-" + Math.floor(1000 + Math.random() * 9000),
+          email: currentUser.email,
+          name: currentUser.name,
+          title,
+          details,
+          category,
+          status: "PENDING",
+          reply: null,
+          timestamp: new Date().toISOString()
+        };
+        mockTickets.push(newTicket);
+        saveMockTickets();
+        showToast("Offline sandbox ticket submitted successfully!");
+        document.getElementById("supportTicketForm").reset();
+        renderSupportTickets(mockTickets);
+      }
+    }
+
+    // --- CERTIFIED PRINT INVOICES ---
+    function openInvoiceModal(receiptJsonStr) {
+      const h = JSON.parse(decodeURIComponent(receiptJsonStr));
+      
+      document.getElementById("invStudentName").innerText = currentUser.name;
+      document.getElementById("invStudentRoll").innerText = currentUser.rollNumber || "40001";
+      document.getElementById("invStudentClass").innerText = `${currentUser.classAssigned} - Section ${currentUser.sectionAssigned}`;
+      document.getElementById("invStatementDate").innerText = new Date(h.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      
+      document.getElementById("invRefHash").innerText = h.reference;
+      document.getElementById("invAmount").innerText = `INR ${h.amount.toLocaleString()}.00`;
+      
+      // Dynamic signature code representation
+      const sigCode = `SIGN: SBS-RECEIPT-HASH-${currentUser.rollNumber}-${h.reference}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      document.getElementById("invCryptSig").innerText = sigCode;
+      
+      const qrData = `Sri Basaveswara School ERP\nVerification: TUITION RECEIPT\nStudent: ${currentUser.name}\nRoll: ${currentUser.rollNumber || "40001"}\nReference: ${h.reference}\nAmount: INR ${h.amount.toLocaleString()}.00\nSignature: ${sigCode}`;
+      document.getElementById("invQrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+      
+      document.getElementById("certifiedInvoiceModal").classList.remove("hidden");
+    }
+
+    function closeInvoiceModal() {
+      document.getElementById("certifiedInvoiceModal").classList.add("hidden");
+    }
+
+    // --- THINK AI DIALOG CHAT SYSTEMS ---
+    function toggleAIChat() {
+      const canvas = document.getElementById("aiChatCanvas");
+      canvas.classList.toggle("opacity-0");
+      canvas.classList.toggle("pointer-events-none");
+      canvas.classList.toggle("translate-y-10");
+    }
+
+    function handleAISubmitKey(event) {
+      if (event.key === 'Enter') {
+        sendAIChatPrompt();
+      }
+    }
+
+    async function sendAIChatPrompt() {
+      const input = document.getElementById("aiChatInput");
+      const prompt = input.value.trim();
+      if (!prompt) return;
+      
+      input.value = "";
+      const log = document.getElementById("aiChatMessages");
+      
+      // Render user prompt
+      const userDiv = document.createElement("div");
+      userDiv.className = "flex gap-2.5 items-start justify-end";
+      userDiv.innerHTML = `
+        <div class="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl shadow-sm text-slate-800 leading-relaxed font-semibold max-w-[80%] text-left">${prompt}</div>
+        <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 font-bold text-[9px] font-outfit">ME</div>
+      `;
+      log.appendChild(userDiv);
+      log.scrollTop = log.scrollHeight;
+      
+      // Render typing placeholder
+      const typDiv = document.createElement("div");
+      typDiv.id = "aiTyping";
+      typDiv.className = "flex gap-2.5 items-start";
+      typDiv.innerHTML = `
+        <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+        <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed text-slate-400 italic">Thinking...</div>
+      `;
+      log.appendChild(typDiv);
+      log.scrollTop = log.scrollHeight;
+      
+      try {
+        const response = await fetch(`${API_URL}/ai/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await response.json();
+        
+        // Remove typing
+        document.getElementById("aiTyping").remove();
+        
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "flex gap-2.5 items-start text-left";
+        aiDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+          <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed font-semibold max-w-[80%] whitespace-pre-wrap">${data.response || data.message}</div>
+        `;
+        log.appendChild(aiDiv);
+        log.scrollTop = log.scrollHeight;
+        lucide.createIcons();
+      } catch (err) {
+        document.getElementById("aiTyping").remove();
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "flex gap-2.5 items-start text-left";
+        aiDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+          <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed text-rose-600 font-bold">Sorry, I encountered a connection timeout. Please verify Render backend online state.</div>
+        `;
+        log.appendChild(aiDiv);
+        log.scrollTop = log.scrollHeight;
+      }
+    }
+
+    // --- OFFLINE SIMULATION FALLBACK TRIGGERS (Saas Resilience) ---
+    
+    // Local mock parent tickets DB
+    let mockTickets = JSON.parse(localStorage.getItem("mock_tickets_db"));
+    if (!mockTickets) {
+      mockTickets = [
+        { ticketId: "TCK-4819", email: "student@gmail.com", name: "Master Abhishek Gowda", title: "Requesting School Bus Route 4 Adjustment", details: "The current morning pickup is slightly early. Can it be adjusted by 10 minutes?", category: "Transport Desk", status: "PENDING", reply: null, timestamp: new Date(Date.now() - 3600000 * 2).toISOString() },
+        { ticketId: "TCK-1092", email: "student@gmail.com", name: "Master Abhishek Gowda", title: "Clarification on Mid-Term Mathematics score sheet", details: "Teacher mentioned a correction on grading sheet 2, please recheck.", category: "Academic Score Desk", status: "RESOLVED", reply: "Score updated to 95. verified by teacher Smt. Sharanamma M.", timestamp: new Date(Date.now() - 3600000 * 24).toISOString() }
+      ];
+      localStorage.setItem("mock_tickets_db", JSON.stringify(mockTickets));
+    }
+
+    // Local mock users DB (shared origin with academics)
+    let mockUsers = JSON.parse(localStorage.getItem("mock_users_db"));
+    if (!mockUsers) {
+      mockUsers = [
+        { name: "Adarsh B A", email: "adhibasavanal@gmail.com", role: "Admin", classAssigned: "All", sectionAssigned: "All", phone: "919876543210", salary: 0, status: "Active", password: "Admin@2026" },
+        { name: "Dr. Basavaraj S.", email: "principal@basaveswara.edu.in", role: "Principal", classAssigned: "All", sectionAssigned: "All", phone: "919876543211", salary: 65000, status: "Active", password: "Principal@2026" },
+        { name: "Smt. Sharanamma M.", email: "teacher@basaveswara.edu.in", role: "Teacher", classAssigned: "Class 10", sectionAssigned: "A", phone: "919876543212", salary: 35000, status: "Active", password: "Teacher@2026" },
+        { name: "Master Abhishek Gowda", email: "student@gmail.com", role: "Student", classAssigned: "Class 10", sectionAssigned: "A", phone: "919876543213", salary: 0, status: "Active", rollNumber: "40001", password: "Student@2026" }
+      ];
+      localStorage.setItem("mock_users_db", JSON.stringify(mockUsers));
+    }
+
+    function saveMockTickets() {
+      localStorage.setItem("mock_tickets_db", JSON.stringify(mockTickets));
+    }
+
+    function triggerOfflineMockLogin(email, password) {
+      const cleanInput = email.trim().toLowerCase();
+      const foundStudent = mockUsers.find(u => u.role === "Student" && (u.email.toLowerCase() === cleanInput || u.rollNumber === cleanInput));
+      
+      if (foundStudent) {
+        // Validate password for student account privacy
+        const expectedPassword = foundStudent.password || "Student@2026";
+        if (password !== expectedPassword) {
+          showToast("Access Denied: Incorrect secret credentials PIN.", "error");
+          return;
+        }
+        
+        currentToken = `MOCK_STUDENT_TOKEN_${foundStudent.rollNumber}`;
+        currentUser = {
+          email: foundStudent.email,
+          role: "Student",
+          name: foundStudent.name,
+          classAssigned: foundStudent.classAssigned || "Class 10",
+          sectionAssigned: foundStudent.sectionAssigned || "A",
+          rollNumber: foundStudent.rollNumber
+        };
+        
+        localStorage.setItem("parentlink_session_token", currentToken);
+        localStorage.setItem("parentlink_user_info", JSON.stringify(currentUser));
+        
+        showToast("Success: Logged in using resilient offline fallback authentication.");
+        loadDashboard();
+      } else {
+        showToast("Offline Error: Access denied. (Account not found in active student rosters)", "error");
+      }
+    }
+
+    function renderOfflineMockData() {
+      const mockExams = [
+        { subject: "Mathematics", examSession: "Mid-Term 2026", marks: 95, maxMarks: 100, grade: "A+" },
+        { subject: "Science", examSession: "Mid-Term 2026", marks: 88, maxMarks: 100, grade: "A" },
+        { subject: "Kannada", examSession: "Mid-Term 2026", marks: 74, maxMarks: 100, grade: "B" },
+        { subject: "English", examSession: "Mid-Term 2026", marks: 91, maxMarks: 100, grade: "A+" }
+      ];
+      renderGrades(mockExams);
+      renderAttendance([{ presentDays: 22, totalDays: 24 }]);
+      
+      const mockFees = {
+        totalDue: 45000,
+        paidAmount: 15000,
+        history: [
+          { amount: 15000, reference: "UPI987234123", timestamp: new Date().toISOString() }
+        ]
+      };
+      renderFees(mockFees);
+
+      // Render mock notices
+      renderNoticeBoard([
+        { announcementId: "ANN-1001", title: "🏫 Dynamic ERP Portal Activation", content: "Official notification: Sri Basaveswara School Management Board has successfully activated the hybrid Node.js credentials system. Parents can access live invoice transcripts.", timestamp: new Date().toISOString(), author: "sribasaveswaraschool@gmail.com" }
+      ]);
+
+      // Render mock homework
+      renderHomework([
+        { homeworkId: "HW-101", subject: "Mathematics", dueDate: new Date(Date.now() + 86400000).toISOString(), taskDetails: "Complete exercises 4.2 to 4.5 in Algebra textbooks.", assignedBy: "teacher@basaveswara.edu.in" },
+        { homeworkId: "HW-102", subject: "Science", dueDate: new Date(Date.now() + 86400000 * 2).toISOString(), taskDetails: "Draw diagram of human heart and label chambers.", assignedBy: "teacher@basaveswara.edu.in" }
+      ]);
+
+      // Render mock library checkouts
+      renderLibrary([
+        { recordId: "LIB-1001", bookTitle: "Brief History of Time", author: "Stephen Hawking", checkoutDate: new Date(Date.now() - 86400000 * 5).toISOString(), returnDate: null, status: "CHECKED_OUT" }
+      ]);
+
+      // Render mock tickets
+      renderSupportTickets(mockTickets);
+
+      // Render mock timetable
+      const mockTimetable = [];
+      const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const subjects = ["Mathematics", "Science", "Kannada", "English", "Social Studies", "Physical Education"];
+      days.forEach(day => {
+        for (let p = 1; p <= 6; p++) {
+          mockTimetable.push({
+            day: day,
+            period: p,
+            subject: subjects[(p - 1 + days.indexOf(day)) % subjects.length],
+            teacher: "Smt. Sharanamma M."
+          });
+        }
+      });
+      renderTimetable(mockTimetable);
+
+      // Render mock daily attendance calendar
+      const mockDailyAttendance = [
+        { date: "2026-05-25", status: "Present", recordedBy: "teacher@basaveswara.edu.in" },
+        { date: "2026-05-26", status: "Present", recordedBy: "teacher@basaveswara.edu.in" },
+        { date: "2026-05-27", status: "Absent", recordedBy: "teacher@basaveswara.edu.in" },
+        { date: "2026-05-28", status: "Present", recordedBy: "teacher@basaveswara.edu.in" }
+      ];
+      renderDetailedAttendanceCalendar(mockDailyAttendance);
+
+      // Render mock transport
+      const mockTransport = [
+        { vehicleNum: "KA-01-F-1234", routeName: "Basaveswara Nagar - Rajajinagar", driverName: "Ramesh Kumar", driverPhone: "+91 98765 43210", pickupTime: "07:30 AM", dropTime: "04:00 PM" },
+        { vehicleNum: "KA-02-H-5678", routeName: "Vijayanagar - Chandra Layout", driverName: "Shiva Gowda", driverPhone: "+91 98888 77777", pickupTime: "07:45 AM", dropTime: "04:15 PM" }
+      ];
+      renderTransport(mockTransport);
+    }
+
+    async function triggerSimulatedPayment() {
+      const amountVal = document.getElementById("payAmountInput").value;
+      if (!amountVal || parseFloat(amountVal) <= 0) {
+        showToast("Please provide a valid numeric currency amount.", "error");
+        return;
+      }
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+        showToast(`UPI Payment of INR ${parseFloat(amountVal).toLocaleString()} processed! Verification signed by Sri Basaveswara Board.`);
+        document.getElementById("payAmountInput").value = "";
+        
+        if (currentToken === "MOCK_STUDENT_TOKEN_12345") {
+          const mockFees = {
+            totalDue: 45000,
+            paidAmount: 15000 + parseFloat(amountVal),
+            history: [
+              { amount: parseFloat(amountVal), reference: "UPI" + Math.floor(Math.random() * 100000000), timestamp: new Date().toISOString() },
+              { amount: 15000, reference: "UPI987234123", timestamp: new Date().toISOString() }
+            ]
+          };
+          renderFees(mockFees);
+        } else {
+          showToast("Dynamic ledger calculated & synced.");
+          renderOfflineMockData();
+        }
+      }, 1200);
+    }
+  </script>
+  <!-- Certified Tuition Fee Invoice Statement Popup Modal -->
+  <div id="certifiedInvoiceModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden no-print">
+    <div class="bg-white w-full max-w-2xl rounded-3xl border border-slate-100 shadow-2xl p-6 sm:p-10 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeInvoiceModal()" class="absolute top-6 right-6 p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      
+      <!-- Verified Transcript Layout for print -->
+      <div id="printInvoiceContainer" class="space-y-6">
+        <!-- Watermark bg sign -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.02] overflow-hidden">
+          <div class="w-80 h-80 rounded-full border-[20px] border-navy-750 flex items-center justify-center text-[100px] font-black font-outfit text-navy-750">BS</div>
+        </div>
+
+        <div class="flex justify-between items-center pb-4 border-b border-slate-200">
+          <div>
+            <h4 class="text-sm font-black tracking-widest text-indigo-600 uppercase">OFFICIAL TUITION INVOICE</h4>
+            <p class="text-[9px] font-bold text-slate-400 mt-0.5">Sri Basaveswara School Trust &bull; Estd 1978</p>
+          </div>
+          <button onclick="window.print()" class="px-4 py-2 bg-navy-750 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm hover:bg-navy-900">
+            <i data-lucide="printer" class="w-4 h-4"></i> Print Statement
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-100">
+          <div>
+            <p class="text-slate-400 font-bold uppercase text-[9px]">Student Name</p>
+            <p id="invStudentName" class="font-extrabold text-slate-800">Master Abhishek Gowda</p>
+            <p class="text-slate-400 font-bold uppercase text-[9px] mt-2">Roll Number ID</p>
+            <p id="invStudentRoll" class="font-extrabold text-navy-750">40001</p>
+          </div>
+          <div>
+            <p class="text-slate-400 font-bold uppercase text-[9px]">Assigned Class</p>
+            <p id="invStudentClass" class="font-extrabold text-slate-800">Class 10 - Section A</p>
+            <p class="text-slate-400 font-bold uppercase text-[9px] mt-2">Statement Issue Date</p>
+            <p id="invStatementDate" class="font-extrabold text-slate-800">20-May-2026</p>
+          </div>
+        </div>
+
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200">
+              <th class="py-2.5 px-3">Description Description</th>
+              <th class="py-2.5 px-3">Reference Hash</th>
+              <th class="py-2.5 px-3 text-right">Amount Received</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            <tr>
+              <td class="py-3 px-3">
+                <p class="font-bold text-slate-800">SaaS Node Online UPI Payment</p>
+                <p class="text-[9px] text-slate-400">Tuition Fees installment payout circular</p>
+              </td>
+              <td class="py-3 px-3 font-mono text-[10px] text-slate-500" id="invRefHash">UPI987234123</td>
+              <td class="py-3 px-3 text-right font-black text-emerald-600 text-sm" id="invAmount">INR 15,000.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Cryptographic verify details -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 items-end border-t border-slate-250 pt-6">
+          <div class="sm:col-span-2 flex items-center gap-3">
+            <div class="w-16 h-16 bg-slate-50 border border-slate-100 p-1 rounded-lg shrink-0 flex items-center justify-center">
+              <img id="invQrImg" class="w-full h-full object-contain" src="" alt="Receipt Verification QR">
+            </div>
+            <div class="text-[9px] text-slate-400">
+              <span class="px-2 py-0.5 rounded bg-emerald-50 text-[7px] font-black tracking-widest text-emerald-600 uppercase">Board Seal</span>
+              <p class="font-mono mt-1" id="invCryptSig">SIGN: SBS-INVOICE-HASH-40001-VAL</p>
+              <p class="mt-0.5">Officially certified fee voucher statement. Registered secure node.</p>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="border-b border-slate-350 pb-1 font-serif italic text-xs text-navy-750">Dr. Basavaraj S.</div>
+            <p class="text-[8px] font-black uppercase text-slate-400 tracking-wider mt-1">Registrar Authorized Signature</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THINK AI: Floating Smart Assistant HTML -->
+  <div id="aiChatBubble" onclick="toggleAIChat()" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-navy-750 to-indigo-900 text-white rounded-full flex items-center justify-center cursor-pointer shadow-2xl hover:scale-110 transition-transform relative group no-print">
+    <div class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full animate-ping"></div>
+    <div class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full flex items-center justify-center text-[8px] font-black text-white">1</div>
+    <i data-lucide="brain" class="w-6 h-6 animate-pulse"></i>
+    <span class="absolute right-16 scale-0 group-hover:scale-100 transition-transform bg-slate-900/90 text-white text-[9px] font-black tracking-widest px-3 py-1.5 rounded-xl uppercase whitespace-nowrap shadow-md">Think AI Assistant</span>
+  </div>
+
+  <!-- Sliding AI Chat Canvas -->
+  <div id="aiChatCanvas" class="fixed bottom-24 right-6 z-50 w-80 sm:w-96 h-[480px] bg-white rounded-3xl border border-slate-200/80 shadow-2xl flex flex-col justify-between overflow-hidden transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none no-print">
+    
+    <!-- AI header -->
+    <div class="p-4 bg-gradient-to-r from-navy-750 to-indigo-900 text-white flex justify-between items-center shadow-md">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center"><i data-lucide="brain" class="w-4.5 h-4.5"></i></div>
+        <div class="text-left">
+          <h4 class="text-xs font-black tracking-wider uppercase font-outfit">Think AI Assistant</h4>
+          <span class="text-[8px] font-bold text-indigo-200 uppercase tracking-widest block mt-0.5">Sri Basaveswara Student Node</span>
+        </div>
+      </div>
+      <button onclick="toggleAIChat()" class="p-1 hover:bg-white/10 rounded-lg transition-colors text-white/70 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <!-- AI logs -->
+    <div id="aiChatMessages" class="p-4 flex-grow overflow-y-auto space-y-4 text-xs">
+      <div class="flex gap-2.5 items-start">
+        <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+        <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed font-semibold text-slate-700">
+          Hello! I am <strong>Think AI</strong>, your Sri Basaveswara school learning and administrative smart assistant.
+          <br/><br/>
+          I have read-only database access to help you verify class assignments, examine homework syllabuses, query library catalog books, check attendance percentages, or outline exam scoring charts. What can I help you study today?
+        </div>
+      </div>
+    </div>
+
+    <!-- AI input -->
+    <div class="p-3 border-t border-slate-100 flex gap-2 items-center bg-slate-50">
+      <input type="text" id="aiChatInput" onkeydown="handleAISubmitKey(event)" class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs flex-grow focus:outline-none focus:border-navy-750 bg-white font-semibold" placeholder="Ask Think AI anything...">
+      <button onclick="sendAIChatPrompt()" class="p-2.5 bg-navy-750 text-white rounded-xl shadow-md hover:scale-105 transition-transform shrink-0"><i data-lucide="send" class="w-4 h-4"></i></button>
+    </div>
+
+  </div>
+
+</body>
+</html>

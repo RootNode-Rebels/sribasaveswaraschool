@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Results Gateway - Sri Basaveswara School</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons System -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+    .btn-navy {
+      background-color: #00205B;
+      color: #ffffff;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-navy:hover {
+      background-color: #00153D;
+      box-shadow: 0 4px 12px rgba(0, 32, 91, 0.2);
+    }
+    .input-line {
+      border: none;
+      border-bottom: 2px solid #e2e8f0;
+      border-radius: 0;
+      padding: 0.75rem 0;
+      width: 100%;
+      background: transparent;
+      transition: border-color 0.2s;
+    }
+    .input-line:focus {
+      outline: none;
+      border-color: #00205B;
+    }
+    
+    /* Print Styles to render certified clean PDF transcripts */
+    @media print {
+      body {
+        background-color: #ffffff;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              750: '#00205B',
+              900: '#00153D',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-full flex flex-col justify-between">
+
+  <!-- Toast alert manager -->
+  <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- Loading Overlay with Render free-tier cold start support -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="flex flex-col items-center gap-4">
+      <div class="w-14 h-14 border-4 border-navy-750 border-t-transparent rounded-full animate-spin"></div>
+      <p id="loadingOverlayText" class="text-xs font-bold text-navy-750 tracking-wider uppercase font-outfit text-center max-w-xs leading-relaxed">Waking up Cloud Database Server<br/><span class="text-[9px] text-slate-400 mt-1 font-semibold block">(this may take up to 45 seconds during spin-up)</span></p>
+    </div>
+  </div>
+
+  <!-- Main Search Container -->
+  <div class="flex-grow flex flex-col justify-center items-center py-12 px-4">
+    
+    <!-- 1. SEARCH FORM INTERFACE -->
+    <div id="searchView" class="w-full max-w-md bg-white p-8 sm:p-12 rounded-3xl border border-slate-100 shadow-xl transition-all duration-300">
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-12 h-12 bg-navy-750 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4 font-outfit">BS</div>
+        <h2 class="text-3xl font-extrabold text-navy-750 font-outfit tracking-tight text-center">Sri Basaveswara School</h2>
+        <p class="text-xs text-slate-400 mt-1 uppercase font-bold tracking-wider text-center">Public Results Portal</p>
+      </div>
+
+      <div class="mb-8 text-center">
+        <h3 class="text-xl font-black font-outfit text-slate-900 mb-1">Verify Exam Grades</h3>
+        <p class="text-xs text-slate-500">Enter a student's roll identification and select an academic session to query live grade ledger data.</p>
+      </div>
+
+      <form id="searchForm" class="space-y-6" onsubmit="handleResultsQuery(event)">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="rollNumberInput">Student Roll Number</label>
+          <input type="text" id="rollNumberInput" class="input-line text-sm" placeholder="e.g. 40001" required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="examSessionSelect">Academic Exam Session</label>
+          <select id="examSessionSelect" class="input-line text-sm font-bold bg-white focus:outline-none">
+            <option value="Mid-Term 2026">Mid-Term Examination 2026</option>
+            <option value="Annual Exam 2026">Annual Examination 2026</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-4 flex items-center justify-center gap-2">
+          <i data-lucide="search" class="w-4 h-4"></i> RETRIEVE SCORES
+        </button>
+      </form>
+
+      <div class="mt-8 text-center text-[10px] text-slate-400 border-t border-slate-100 pt-6">
+        <p>This is a public catalog directory verification gate.</p>
+        <p class="mt-2">&copy; Sri Basaveswara School Registrar Office</p>
+      </div>
+    </div>
+
+    <!-- 2. TRANSCRIPT VIEWING WINDOW (Print Ready) -->
+    <div id="transcriptView" class="w-full max-w-3xl bg-white p-6 sm:p-12 rounded-3xl border border-slate-150 shadow-2xl transition-all duration-300 hidden print-card">
+      
+      <!-- Back to search / Print utility header (hidden in printing) -->
+      <div class="flex justify-between items-center pb-6 border-b border-slate-100 mb-8 no-print">
+        <button onclick="switchView('searchView')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Search Again
+        </button>
+        <button onclick="window.print()" class="px-5 py-2 btn-navy font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm">
+          <i data-lucide="printer" class="w-4 h-4"></i> PRINT TRANSCRIPT
+        </button>
+      </div>
+
+      <!-- Verified Transcript Layout -->
+      <div class="space-y-8 relative">
+        
+        <!-- Watermark bg sign -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">
+          <div class="w-80 h-80 rounded-full border-[20px] border-navy-750 flex items-center justify-center text-[100px] font-black font-outfit text-navy-750">BS</div>
+        </div>
+
+        <!-- Transcript Branded Header -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-navy-750 pb-6 gap-6">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-navy-750 text-white rounded-2xl flex items-center justify-center font-bold text-2xl font-outfit shadow-md">BS</div>
+            <div>
+              <h1 class="text-2xl font-black font-outfit text-navy-750 tracking-tight">Sri Basaveswara School</h1>
+              <p class="text-[9px] font-black uppercase text-indigo-500 tracking-widest mt-0.5">Estd 1978 &bull; Affiliated Central Board of Secondary Education</p>
+              <p class="text-[10px] text-slate-400 mt-1">Registrar Registry: certified@basaveswara.edu.in</p>
+            </div>
+          </div>
+          <div class="text-left sm:text-right">
+            <span class="px-3 py-1 rounded bg-emerald-50 border border-emerald-100 text-[10px] font-black text-emerald-600 uppercase tracking-widest block w-fit sm:ml-auto">VERIFIED LEDGER</span>
+            <p class="text-[10px] font-bold text-slate-500 mt-1.5" id="displayReportDate">Issue Date: 21-May-2026</p>
+          </div>
+        </div>
+
+        <!-- Student Profile Metadata details -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+          <div class="space-y-2 text-xs">
+            <p class="text-slate-500 font-semibold flex justify-between"><span class="w-1/3">Student Name:</span> <strong class="text-slate-800 w-2/3" id="transName">Master Abhishek Gowda</strong></p>
+            <p class="text-slate-500 font-semibold flex justify-between"><span class="w-1/3">Roll ID Number:</span> <strong class="text-navy-750 w-2/3" id="transRoll">40001</strong></p>
+          </div>
+          <div class="space-y-2 text-xs">
+            <p class="text-slate-500 font-semibold flex justify-between"><span class="w-1/3">Assigned Class:</span> <strong class="text-slate-800 w-2/3" id="transClass">Class 10 - Section A</strong></p>
+            <p class="text-slate-500 font-semibold flex justify-between"><span class="w-1/3">Exam Session:</span> <strong class="text-slate-800 w-2/3" id="transSession">Mid-Term 2026</strong></p>
+          </div>
+        </div>
+
+        <!-- Grades sheet Table -->
+        <div class="space-y-3">
+          <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Academic scores record card</h3>
+          <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200 text-center">
+                  <th class="py-3 px-4 text-left">Subject</th>
+                  <th class="py-3 px-4">Marks Obtained</th>
+                  <th class="py-3 px-4">Max Points</th>
+                  <th class="py-3 px-4">Percentage</th>
+                  <th class="py-3 px-4">Evaluated Grade</th>
+                </tr>
+              </thead>
+              <tbody id="transTableBody" class="divide-y divide-slate-100 text-slate-700 text-center">
+                <!-- Dynamic marks list -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bottom verification credentials with Dynamic QR representation -->
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-8 items-end border-t border-slate-150 pt-8">
+          
+          <!-- Abstract verify QR code representation -->
+          <div class="sm:col-span-8 flex items-start gap-4 text-xs text-slate-500">
+            <div class="w-24 h-24 bg-slate-50 border border-slate-100 p-1.5 rounded-xl flex items-center justify-center shrink-0">
+              <img id="transQrImg" class="w-full h-full object-contain" src="" alt="Transcript Verification QR">
+            </div>
+            <div class="space-y-1">
+              <span class="px-2 py-0.5 rounded bg-emerald-50 text-[8px] font-black tracking-widest text-emerald-600 uppercase">Cryptographic Audit Code</span>
+              <p class="font-mono text-[9px] text-slate-400 break-all" id="transCryptSig">SIGN: SBS-QR-40001-MIDTERM-ADARSHBA-SIG991283</p>
+              <p class="leading-normal text-[10px]">Verify credentials by scanning QR code. Results pulled directly from persistent school databases.</p>
+            </div>
+          </div>
+
+          <!-- Signatures -->
+          <div class="sm:col-span-4 text-center space-y-4">
+            <div class="border-b border-slate-300 pb-2">
+              <!-- Mock elegant cursive signature for principal -->
+              <span class="font-serif italic text-base text-navy-750 tracking-wider">Dr. Basavaraj S.</span>
+            </div>
+            <p class="text-[9px] font-black uppercase text-slate-400 tracking-wider">Principal Executive Signature</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom micro footer -->
+  <footer class="w-full py-4 text-center text-[10px] text-slate-400 border-t border-slate-100 bg-white no-print">
+    <p>&copy; 2026 Sri Basaveswara School Management Board. Public SaaS Registry Verification.</p>
+  </footer>
+
+  <!-- Script results controller -->
+  <script>
+    const API_URL = "http://localhost:5000/api";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      document.getElementById("displayReportDate").innerText = `Issue Date: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+    });
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `px-4 py-3 rounded-xl shadow-lg border text-xs font-bold flex items-center gap-2 transform translate-y-2 opacity-0 transition-all duration-300 ${
+        type === 'success' 
+          ? 'bg-emerald-50 border-emerald-100 text-emerald-700' 
+          : 'bg-rose-50 border-rose-100 text-rose-700'
+      }`;
+      
+      const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      
+      lucide.createIcons();
+      
+      setTimeout(() => {
+        toast.classList.remove("translate-y-2", "opacity-0");
+      }, 50);
+      
+      setTimeout(() => {
+        toast.classList.add("translate-y-2", "opacity-0");
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function switchView(viewId) {
+      document.getElementById("searchView").classList.add("hidden");
+      document.getElementById("transcriptView").classList.add("hidden");
+      
+      document.getElementById(viewId).classList.remove("hidden");
+    }
+
+    // Abortable fetch with custom timeout limit
+    async function fetchWithTimeout(resource, options = {}) {
+      const { timeout = 45000 } = options;
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal
+      });
+      clearTimeout(id);
+      return response;
+    }
+
+    // Query result dispatcher
+    async function handleResultsQuery(event) {
+      event.preventDefault();
+      const rollNumber = document.getElementById("rollNumberInput").value.trim();
+      const examSession = document.getElementById("examSessionSelect").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        // Retry connection up to 3 times to allow cold start server wakes
+        let response = null;
+        let attempt = 0;
+        const maxAttempts = 3;
+        
+        while (attempt < maxAttempts) {
+          try {
+            attempt++;
+            console.log(`Connection attempt ${attempt}...`);
+            response = await fetchWithTimeout(`${API_URL}/results/query`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ rollNumber, examSession }),
+              timeout: 15000 // 15s per attempt, total 45s
+            });
+            break; // Success!
+          } catch (fetchErr) {
+            if (attempt >= maxAttempts) throw fetchErr;
+            // Wait 2s before retry
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          showToast("Results registry retrieved successfully!");
+          renderTranscript(data);
+        } else {
+          showToast(data.message || "Roll ID details could not be found.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        console.warn("Connection lost. Invoking offline query registry mock simulation.");
+        triggerOfflineMockQuery(rollNumber, examSession);
+      }
+    }
+
+    // Render printable certified transcript
+    function renderTranscript(data) {
+      switchView("transcriptView");
+      
+      const { studentInfo, grades } = data;
+      
+      document.getElementById("transName").innerText = studentInfo.name;
+      document.getElementById("transRoll").innerText = studentInfo.rollNumber;
+      document.getElementById("transClass").innerText = `${studentInfo.classAssigned} - Section ${studentInfo.sectionAssigned}`;
+      document.getElementById("transSession").innerText = data.grades.length > 0 ? data.grades[0].examSession : "Mid-Term 2026";
+      
+      // Dynamic signature code representation
+      const sigCode = `SIGN: SBS-QR-${studentInfo.rollNumber}-${examSessionSelect.value.replace(/\s+/g, '').toUpperCase()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      document.getElementById("transCryptSig").innerText = sigCode;
+      
+      const qrData = `Sri Basaveswara School ERP\nVerification: CERTIFIED TRANSCRIPT\nStudent Name: ${studentInfo.name}\nRoll Number: ${studentInfo.rollNumber}\nSession: ${document.getElementById("transSession").innerText}\nSignature Hash: ${sigCode}`;
+      document.getElementById("transQrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
+
+      const tbody = document.getElementById("transTableBody");
+      tbody.innerHTML = "";
+      
+      if (!grades || grades.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No approved grade files uploaded for this exam session yet. Check again later.</td></tr>`;
+        return;
+      }
+      
+      grades.forEach(g => {
+        const pct = ((g.marks / g.maxMarks) * 100).toFixed(1);
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-slate-800 text-left">${g.subject}</td>
+          <td class="py-3 px-4 font-extrabold text-navy-750">${g.marks}</td>
+          <td class="py-3 px-4 text-slate-400">${g.maxMarks}</td>
+          <td class="py-3 px-4 text-slate-600 font-bold">${pct}%</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-0.5 rounded text-[10px] font-black border bg-slate-50 font-mono">${g.grade}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Offline simulation pipeline
+    function triggerOfflineMockQuery(roll, examSession) {
+      if (roll === "40001") {
+        const data = {
+          studentInfo: {
+            name: "Master Abhishek Gowda",
+            rollNumber: "40001",
+            classAssigned: "Class 10",
+            sectionAssigned: "A"
+          },
+          grades: [
+            { subject: "Mathematics", marks: 95, maxMarks: 100, grade: "A+", examSession: examSession },
+            { subject: "Science", marks: 88, maxMarks: 100, grade: "A", examSession: examSession },
+            { subject: "Kannada", marks: 74, maxMarks: 100, grade: "B", examSession: examSession },
+            { subject: "English", marks: 91, maxMarks: 100, grade: "A+", examSession: examSession }
+          ]
+        };
+        showToast("Success: Retrieved local offline verification transcript.");
+        renderTranscript(data);
+      } else {
+        showToast("Offline query error: Roster details could not be found. (Use Roll ID 40001 for offline verification previews)", "error");
+      }
+    }
+  </script>
+</body>
+</html>

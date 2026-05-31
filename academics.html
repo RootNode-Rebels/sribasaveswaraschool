@@ -1,0 +1,3286 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academics Workspace - Sri Basaveswara School</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons System -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #ffffff;
+      color: #0f172a;
+    }
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+    .btn-navy {
+      background-color: #00205B;
+      color: #ffffff;
+      transition: all 0.2s ease-in-out;
+    }
+    .btn-navy:hover {
+      background-color: #00153D;
+      box-shadow: 0 4px 12px rgba(0, 32, 91, 0.2);
+    }
+    .input-line {
+      border: none;
+      border-bottom: 2px solid #e2e8f0;
+      border-radius: 0;
+      padding: 0.75rem 0;
+      width: 100%;
+      background: transparent;
+      transition: border-color 0.2s;
+    }
+    .input-line:focus {
+      outline: none;
+      border-color: #00205B;
+    }
+    
+    /* Spreadsheet Grid Input Styles */
+    .grid-cell-input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0.5rem;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      background: transparent;
+      outline: none;
+      transition: background-color 0.15s;
+    }
+    .grid-cell-input:focus {
+      background-color: #f1f5f9;
+      box-shadow: inset 0 0 0 2px #00205B;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              750: '#00205B',
+              900: '#00153D',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-full flex flex-col justify-between">
+
+  <!-- Toast Alert Manager -->
+  <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+  <!-- Loading Mask Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-white/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-12 h-12 border-4 border-navy-750 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-xs font-bold text-navy-750 tracking-wider uppercase font-outfit">Synchronizing Core Ledger...</p>
+    </div>
+  </div>
+
+  <!-- Workspace Shell Container -->
+  <div class="flex-grow flex flex-col justify-center items-center py-10 px-4">
+    
+    <!-- 1. ACADEMICS GATEWAY LOGIN VIEW (Screenshot Matched & Minimalist) -->
+    <div id="loginView" class="w-full max-w-md bg-white p-8 sm:p-12 transition-all duration-300">
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-12 h-12 bg-navy-750 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4 font-outfit">BS</div>
+        <h2 class="text-3xl font-extrabold text-navy-750 font-outfit tracking-tight text-center">Sri Basaveswara School</h2>
+        <p class="text-sm text-slate-500 mt-1 uppercase font-bold tracking-wider text-center">Academics Workspace</p>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="text-2xl font-black font-outfit text-slate-900 mb-2">Sign in to Academics</h3>
+        <p class="text-xs text-slate-400 font-medium">Administration workspace for Teachers, Executives, Principal, and Global Super Admin Adarsh B A.</p>
+      </div>
+
+      <form id="loginForm" class="space-y-6" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="emailInput">Username</label>
+          <input type="text" id="emailInput" class="input-line text-sm" placeholder="Enter Username (Email)" required>
+        </div>
+
+        <div class="relative">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="passwordInput">Secret Password</label>
+          <input type="password" id="passwordInput" class="input-line text-sm pr-10" placeholder="••••••••" required>
+          <button type="button" onclick="togglePasswordVisibility('passwordInput', 'eyeIcon')" class="absolute right-0 bottom-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+            <i id="eyeIcon" data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-4">
+          LOGIN
+        </button>
+      </form>
+
+      <div class="mt-8 text-center text-xs text-slate-500">
+        <p>Staff Application? <button onclick="switchView('signupView')" class="text-navy-750 font-bold hover:underline">Apply for Academic Credentials</button></p>
+        <p class="mt-4 text-[10px] text-slate-400">Secure Role-Based Portal Matrix &bull; Estd 1978</p>
+      </div>
+    </div>
+
+    <!-- 2. STAFF SIGNUP VIEW -->
+    <div id="signupView" class="w-full max-w-md bg-white p-8 sm:p-12 transition-all duration-300 hidden">
+      <div class="flex items-center gap-3 mb-8">
+        <button onclick="switchView('loginView')" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        </button>
+        <div>
+          <h2 class="text-xl font-bold font-outfit text-navy-750">Staff Application</h2>
+          <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Academics Employment Registry</p>
+        </div>
+      </div>
+
+      <form id="signupForm" class="space-y-4" onsubmit="handleSignup(event)">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupName">Full Legal Name</label>
+          <input type="text" id="signupName" class="input-line text-sm" placeholder="e.g. Smt. Sharanamma M." required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupEmail">Username (Email)</label>
+          <input type="email" id="signupEmail" class="input-line text-sm" placeholder="e.g. teacher@basaveswara.edu.in" required>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupRole">Desired Academic Role</label>
+          <select id="signupRole" class="input-line text-sm" onchange="toggleSignupFields()" required>
+            <option value="Teacher">Subject Teacher / Class Instructor</option>
+            <option value="Principal">Principal Executive</option>
+          </select>
+        </div>
+
+        <div id="teacherDetailsForm" class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupClass">Class Assigned</label>
+            <select id="signupClass" class="input-line text-sm">
+              <option value="Class 10">Class 10</option>
+              <option value="Class 9">Class 9</option>
+              <option value="Class 8">Class 8</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupSection">Section Assigned</label>
+            <select id="signupSection" class="input-line text-sm">
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="relative">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="signupPassword">Workspace Access Password</label>
+          <input type="password" id="signupPassword" class="input-line text-sm pr-10" placeholder="Choose a secure password" required>
+          <button type="button" onclick="togglePasswordVisibility('signupPassword', 'signupEyeIcon')" class="absolute right-0 bottom-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+            <i id="signupEyeIcon" data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-6">
+          SUBMIT APPLICATION
+        </button>
+      </form>
+    </div>
+
+    <!-- 3. TEMPORARY PASSWORD ROTATION (Forced Reset Flow for Admin Boot) -->
+    <div id="resetPwView" class="w-full max-w-md bg-white p-8 sm:p-12 transition-all duration-300 hidden">
+      <div class="flex flex-col items-center mb-6">
+        <div class="w-12 h-12 bg-amber-500 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4"><i data-lucide="key-round" class="w-6 h-6"></i></div>
+        <h2 class="text-2xl font-black font-outfit text-slate-900 tracking-tight text-center">Rotate Temp Password</h2>
+        <p class="text-xs text-rose-500 font-bold uppercase tracking-wider mt-1">Required Safety Measure</p>
+      </div>
+
+      <div class="mb-6">
+        <p class="text-xs text-slate-500 text-center">Master Admin <strong>Adarsh B A</strong>, you logged in using your initial seed temporary password. For enterprise integrity, please define a secure custom credentials key to proceed.</p>
+      </div>
+
+      <form id="resetPwForm" class="space-y-4" onsubmit="handleTempPasswordReset(event)">
+        <div class="relative">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1" for="resetPasswordInput">Define Custom Secure Password</label>
+          <input type="password" id="resetPasswordInput" class="input-line text-sm pr-10" placeholder="••••••••" required>
+          <button type="button" onclick="togglePasswordVisibility('resetPasswordInput', 'resetEyeIcon')" class="absolute right-0 bottom-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+            <i id="resetEyeIcon" data-lucide="eye" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-navy w-full py-3.5 uppercase font-bold text-xs tracking-wider rounded shadow-md mt-6">
+          SET CUSTOM CREDENTIALS
+        </button>
+      </form>
+    </div>
+
+    <!-- 4. CORE ENTERPRISE WORKSPACE DESKTOP (Role Adaptive Dashboard) -->
+    <div id="workspaceView" class="w-full max-w-7xl bg-slate-50 rounded-3xl border border-slate-100 shadow-2xl p-6 sm:p-10 transition-all duration-300 hidden">
+      
+      <!-- Top Dynamic Profile Status -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-200/80 pb-6 mb-8 gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 bg-navy-750 text-white rounded-2xl flex items-center justify-center font-bold text-2xl font-outfit shadow-lg shadow-navy-750/20">BS</div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="displayRoleBadge" class="px-2.5 py-0.5 rounded text-[9px] font-black tracking-widest uppercase">Admin Mode</span>
+              <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">Enterprise Roster</span>
+            </div>
+            <h2 id="displayStaffName" class="text-2xl font-black font-outfit text-slate-900 mt-1">Adarsh B A</h2>
+            <p class="text-xs text-slate-500">Security signature: <strong id="displayStaffEmail" class="text-navy-750 font-mono text-[11px]">adhibasavanal@gmail.com</strong></p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <div id="simStaffContainer" class="bg-white border border-slate-200/80 p-1.5 rounded-xl flex gap-1.5 items-center mr-2 shadow-sm hidden">
+            <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest px-2">Simulate Staff</span>
+            <select id="offlineUserSimSelect" onchange="handleOfflineUserSimChange()" class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:outline-none cursor-pointer">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <button onclick="logout()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors whitespace-nowrap">
+            <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- Workspace grid panels layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Sidebar Navigation -->
+        <div class="lg:col-span-3 space-y-6">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200/60 shadow-sm space-y-1" id="sidebarMenu">
+            <!-- Sidebar links dynamically drawn depending on roles -->
+          </div>
+        </div>
+
+        <!-- Main workspace target canvas -->
+        <div class="lg:col-span-9 space-y-6">
+          
+          <!-- ================= ROLE: SUPER ADMIN DESKS ================= -->
+          
+          <!-- Desk 1: Financial Balance Ledger Sheet -->
+          <div id="deskAdminFinancials" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-8">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Enterprise Balance Sheets</h3>
+                <p class="text-xs text-slate-500">Live transaction overview combining tuition collections vs payroll salaries & operation costs</p>
+              </div>
+
+              <!-- Metrics cards -->
+              <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                  <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Total Fees Collected</span>
+                  <p class="text-xl font-black text-emerald-700 mt-1" id="finTotalIncome">INR 0.00</p>
+                </div>
+                <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl">
+                  <span class="text-[9px] font-black text-rose-600 uppercase tracking-widest">Aggregate Costs</span>
+                  <p class="text-xl font-black text-rose-700 mt-1" id="finTotalExpenses">INR 0.00</p>
+                </div>
+                <div class="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
+                  <span class="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Staff Payroll Outlay</span>
+                  <p class="text-xl font-black text-indigo-700 mt-1" id="finSalaryExpenses">INR 0.00</p>
+                </div>
+                <div class="p-4 bg-slate-50 border border-slate-200/60 rounded-2xl">
+                  <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Operational Net Profit</span>
+                  <p class="text-xl font-black text-slate-800 mt-1" id="finNetBalance">INR 0.00</p>
+                </div>
+              </div>
+
+              <!-- Log new Expense input -->
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
+                <h4 class="text-xs font-black uppercase text-slate-500 tracking-wider">Register Operational Expenditure</h4>
+                <form id="expenseForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end" onsubmit="handleAddExpense(event)">
+                  <div class="sm:col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Expense Rationale Description</label>
+                    <input type="text" id="expDescInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white" placeholder="e.g. Science Lab Consumables" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Amount (INR)</label>
+                    <input type="number" id="expAmtInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white" placeholder="e.g. 5000" required>
+                  </div>
+                  <button type="submit" class="w-full btn-navy text-xs font-bold py-2 rounded-xl shadow-sm whitespace-nowrap">
+                    LOG EXPENSE
+                  </button>
+                </form>
+              </div>
+
+              <!-- Double Ledger tables -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                
+                <!-- Miscellaneous ledger -->
+                <div>
+                  <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Miscellaneous Operational Costs</h4>
+                  <div class="border border-slate-200/60 rounded-2xl bg-white overflow-hidden max-h-[300px] overflow-y-auto">
+                    <table class="w-full text-left text-[11px] border-collapse">
+                      <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase">
+                          <th class="py-2.5 px-3">Description</th>
+                          <th class="py-2.5 px-3 text-right">Amount</th>
+                          <th class="py-2.5 px-3 text-right">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody id="expenseLedgerBody">
+                        <!-- Dynamic -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Salary payout ledger -->
+                <div>
+                  <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Dispatched Salary Payroll Slip Registry</h4>
+                  <div class="border border-slate-200/60 rounded-2xl bg-white overflow-hidden max-h-[300px] overflow-y-auto">
+                    <table class="w-full text-left text-[11px] border-collapse">
+                      <thead>
+                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase">
+                          <th class="py-2.5 px-3">Employee</th>
+                          <th class="py-2.5 px-3 text-center">Month</th>
+                          <th class="py-2.5 px-3 text-right">Paid</th>
+                          <th class="py-2.5 px-3 text-right">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody id="salaryLedgerBody">
+                        <!-- Dynamic -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Desk 2: Signups Approvals list -->
+          <div id="deskAdminSignups" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <h3 class="text-xl font-black font-outfit text-slate-900 mb-2">Pending Access Applicants Queue</h3>
+              <p class="text-xs text-slate-500 mb-6">Authorize or reject applicant registrations. Approving teachers will assign their active payroll accounts, while students auto-generate school admission roll numbers.</p>
+
+              <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150">
+                      <th class="py-3 px-4">Applicant Name</th>
+                      <th class="py-3 px-4">Email</th>
+                      <th class="py-3 px-4">Role Target</th>
+                      <th class="py-3 px-4">Class assignment</th>
+                      <th class="py-3 px-4 text-center">Action Triage</th>
+                    </tr>
+                  </thead>
+                  <tbody id="signupsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+          </div>
+          
+          <!-- Desk 2.5: User Accounts Manager -->
+          <div id="deskAdminUsers" class="desk-pane space-y-6 hidden">
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+              
+              <!-- Column 1: Add User Form -->
+              <div class="xl:col-span-4 bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 space-y-6">
+                <div>
+                  <h3 class="text-lg font-black font-outfit text-slate-900">Create Profile</h3>
+                  <p class="text-xs text-slate-500">Add new teachers, principals, staff or student accounts manually.</p>
+                </div>
+
+                <form id="adminAddUserForm" class="space-y-4" onsubmit="handleAdminAddUser(event)">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Roster Role</label>
+                    <select id="addUserRole" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:border-navy-750 font-bold" onchange="toggleAddUserFields()" required>
+                      <option value="Teacher">Teacher</option>
+                      <option value="Principal">Principal</option>
+                      <option value="Clerk">Staff: Clerk</option>
+                      <option value="Accountant">Staff: Accountant</option>
+                      <option value="Librarian">Staff: Librarian</option>
+                      <option value="Student">Student</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Full Legal Name</label>
+                    <input type="text" id="addUserName" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white font-semibold" placeholder="e.g. Smt. Sharanamma M." required>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Username (Email)</label>
+                    <input type="email" id="addUserEmail" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white font-semibold" placeholder="e.g. employee@basaveswara.edu.in" required>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Contact Number (WhatsApp)</label>
+                    <input type="tel" id="addUserPhone" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white font-semibold" placeholder="e.g. 919876543210" required>
+                  </div>
+
+                  <div id="addUserSalaryDiv">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Base Salary (INR Monthly)</label>
+                    <input type="number" id="addUserSalary" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white font-semibold" value="25000" placeholder="e.g. 30000">
+                  </div>
+
+                  <div id="addUserClassDiv" class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Class Assigned</label>
+                      <select id="addUserClass" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:border-navy-750 font-semibold">
+                        <option value="Class 10">Class 10</option>
+                        <option value="Class 9">Class 9</option>
+                        <option value="Class 8">Class 8</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Section</label>
+                      <select id="addUserSection" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:border-navy-750 font-semibold">
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Set Password (Temp)</label>
+                    <input type="text" id="addUserPassword" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750 bg-white font-mono" placeholder="Default: Admin@2026">
+                  </div>
+
+                  <button type="submit" class="w-full btn-navy text-xs font-bold py-3 rounded-xl shadow-md uppercase tracking-wider">
+                    Create Profile & Send Welcomes
+                  </button>
+                </form>
+              </div>
+
+              <!-- Column 2: Roster List Ledger -->
+              <div class="xl:col-span-8 bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 space-y-4">
+                <div class="flex justify-between items-center flex-wrap gap-4">
+                  <div>
+                    <h3 class="text-xl font-black font-outfit text-slate-900">Workspace User Directory</h3>
+                    <p class="text-xs text-slate-500">Active roster accounts registered in the Sri Basaveswara ERP ledger.</p>
+                  </div>
+                  <!-- Mini Search Input -->
+                  <div>
+                    <input type="text" id="searchUserRoster" oninput="filterUserRoster()" class="px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-navy-750" placeholder="Search roster members...">
+                  </div>
+                </div>
+
+                <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                  <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150">
+                        <th class="py-3 px-4">Name / Username</th>
+                        <th class="py-3 px-4">Role</th>
+                        <th class="py-3 px-4">Roster Info</th>
+                        <th class="py-3 px-4">Phone Number</th>
+                        <th class="py-3 px-4 text-center">Triage Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminUsersTableBody" class="divide-y divide-slate-100 text-slate-700">
+                      <!-- Dynamic user rows populated via script -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+
+          <!-- Desk 3: Staff Registry Employment & Salary dispatch -->
+          <div id="deskAdminStaff" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <h3 class="text-xl font-black font-outfit text-slate-900 mb-2">Staff Registry & Payroll Dispatches</h3>
+              <p class="text-xs text-slate-500 mb-6">Dispatch monthly salary slips to academic roster staff using Nodemailer SMTP alert networks.</p>
+
+              <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150">
+                      <th class="py-3 px-4">Staff Member</th>
+                      <th class="py-3 px-4">Academic Role</th>
+                      <th class="py-3 px-4">Assigned Class</th>
+                      <th class="py-3 px-4 text-right">Base Salary</th>
+                      <th class="py-3 px-4 text-center">Payout Month Selection</th>
+                      <th class="py-3 px-4 text-center">Action Dispatch</th>
+                    </tr>
+                  </thead>
+                  <tbody id="staffTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desk 4: System Audit Logs -->
+          <div id="deskAdminLogs" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <h3 class="text-xl font-black font-outfit text-slate-900 mb-2">Workspace System Audit Ledger</h3>
+              <p class="text-xs text-slate-500 mb-6">Security logs registering cryptographic actions, IP parameters, login metrics, and grade revisions.</p>
+
+              <div class="overflow-y-auto max-h-[480px] border border-slate-150 rounded-2xl p-4 bg-slate-900 text-slate-200 font-mono text-[10px] space-y-2" id="logsTerminal">
+                <!-- Dynamic Logs -->
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ================= ROLE: PRINCIPAL WORKDESK ================= -->
+          
+          <!-- Desk 5: Validation approval queues -->
+          <div id="deskPrincipalApprovals" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8">
+              <h3 class="text-xl font-black font-outfit text-slate-900 mb-2">Principal Grades Validation Ledger</h3>
+              <p class="text-xs text-slate-500 mb-6">Teachers cannot directly upload exam scores to the database; submissions require audit validation by the Principal. Approving will publish the score to reports instantly.</p>
+
+              <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150">
+                      <th class="py-3 px-4">Teacher Requestor</th>
+                      <th class="py-3 px-4">Exam Session</th>
+                      <th class="py-3 px-4">Subject</th>
+                      <th class="py-3 px-4 text-center">Batch Size</th>
+                      <th class="py-3 px-4 text-center">Review Sheet</th>
+                      <th class="py-3 px-4 text-center">Triage Decision</th>
+                    </tr>
+                  </thead>
+                  <tbody id="principalTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ================= ROLE: TEACHER WORKDESK ================= -->
+          
+          <!-- Desk 6: Classes Selector & Batch Marks Input spreadsheet -->
+          <div id="deskTeacherClasses" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <div>
+                  <h3 class="text-xl font-black font-outfit text-slate-900">Academic Grading Workspace</h3>
+                  <p class="text-xs text-slate-500 mt-1">Configure exams, and input student grades inside the spreadsheet worksheet below.</p>
+                </div>
+                
+                <!-- Roster Class Details Tag -->
+                <div class="px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center gap-3">
+                  <div>
+                    <span class="text-[8px] font-black text-indigo-500 uppercase tracking-widest block">Assigned Classroom</span>
+                    <strong id="teacherClassLabel" class="text-xs font-bold text-navy-750">Class 10 - Section A</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Spreadsheet Config Selection -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-slate-50 border border-slate-100 p-5 rounded-2xl">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Target Exam Session</label>
+                  <select id="examSessionSelect" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:border-navy-750 font-bold">
+                    <!-- Dynamic -->
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject Selection</label>
+                  <select id="examSubjectSelect" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:border-navy-750 font-bold">
+                    <!-- Dynamic -->
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Points / Maximum Score</label>
+                  <input type="number" id="maxMarksInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none focus:border-navy-750 font-bold" value="100" min="1">
+                </div>
+              </div>
+
+              <!-- Spreadsheet Grading Workspace Sheet -->
+              <div>
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Batch Spreadsheet Worksheet</h4>
+                <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-inner">
+                  <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200 text-center">
+                        <th class="py-3 px-4 text-left w-1/4">Roll ID</th>
+                        <th class="py-3 px-4 text-left w-1/2">Student Name</th>
+                        <th class="py-3 px-4 w-1/4">Assigned Grade Points</th>
+                      </tr>
+                    </thead>
+                    <tbody id="spreadsheetBody" class="divide-y divide-slate-100">
+                      <!-- Dynamic Spreadsheet rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Submission buttons -->
+              <div class="flex justify-end gap-3">
+                <button onclick="resetSpreadsheetInputs()" class="px-5 py-2.5 border border-slate-250 text-slate-600 font-bold text-xs rounded-xl hover:bg-slate-100 transition-colors">
+                  Clear Worksheet
+                </button>
+                <button onclick="submitBatchMarks()" class="px-6 py-2.5 btn-navy font-bold text-xs rounded-xl shadow-md">
+                  SUBMIT BATCH TO PRINCIPAL FOR APPROVAL
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Desk 6.2: Daily Attendance Register (Teacher) -->
+          <div id="deskTeacherAttendance" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <div>
+                  <h3 class="text-xl font-black font-outfit text-slate-900">Daily Attendance Register</h3>
+                  <p class="text-xs text-slate-500">Record daily present/absent statuses for students in your assigned classroom.</p>
+                </div>
+                
+                <div class="flex gap-4">
+                  <div>
+                    <label class="block text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-1">Target Date</label>
+                    <input type="date" id="attRegisterDate" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-slate-50 font-bold focus:outline-none focus:border-navy-750" required>
+                  </div>
+                  <div>
+                    <label class="block text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-1">Classroom</label>
+                    <span id="attRegisterClassLabel" class="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-xl font-black text-indigo-700 text-xs block">Class 10 - Section A</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Attendance spreadsheet worksheet -->
+              <div>
+                <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-inner">
+                  <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200 text-center">
+                        <th class="py-3 px-4 text-left w-1/4">Roll ID</th>
+                        <th class="py-3 px-4 text-left w-1/2">Student Name</th>
+                        <th class="py-3 px-4 w-1/4">Daily Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="attendanceRosterBody" class="divide-y divide-slate-100">
+                      <!-- Dynamic Roster Rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Submission buttons -->
+              <div class="flex justify-end gap-3">
+                <button onclick="saveDailyAttendance()" class="px-6 py-2.5 btn-navy font-bold text-xs rounded-xl shadow-md">
+                  SAVE ATTENDANCE REGISTER
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desk 6.4: Manage Timetable Scheduler (Admin) -->
+          <div id="deskAdminTimetable" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                <div>
+                  <h3 class="text-xl font-black font-outfit text-slate-900">Weekly Timetable Scheduler</h3>
+                  <p class="text-xs text-slate-500">Configure weekly subject periods and assign faculty to active classrooms.</p>
+                </div>
+                
+                <div>
+                  <label class="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Target Classroom</label>
+                  <select id="ttClassSelect" onchange="loadAdminTimetable()" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs bg-slate-50 font-bold focus:outline-none focus:border-navy-750">
+                    <option value="Class 10-A">Class 10 - Section A</option>
+                    <option value="Class 9-A">Class 9 - Section A</option>
+                    <option value="Class 8-A">Class 8 - Section A</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Inline Scheduler Form -->
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
+                <h4 class="text-xs font-black uppercase text-slate-500 tracking-wider">Assign Schedule Slot</h4>
+                <form id="ttSchedulerForm" class="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end" onsubmit="handleSaveTimetableSlot(event)">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Day of Week</label>
+                    <select id="ttDaySelect" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" required>
+                      <option value="Monday">Monday</option>
+                      <option value="Tuesday">Tuesday</option>
+                      <option value="Wednesday">Wednesday</option>
+                      <option value="Thursday">Thursday</option>
+                      <option value="Friday">Friday</option>
+                      <option value="Saturday">Saturday</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Period Slot</label>
+                    <select id="ttPeriodSelect" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" required>
+                      <option value="1">Period 1 (09:00 - 10:00)</option>
+                      <option value="2">Period 2 (10:00 - 11:00)</option>
+                      <option value="3">Period 3 (11:15 - 12:15)</option>
+                      <option value="4">Period 4 (12:15 - 01:15)</option>
+                      <option value="5">Period 5 (02:00 - 02:45)</option>
+                      <option value="6">Period 6 (02:45 - 03:30)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject Assignment</label>
+                    <input type="text" id="ttSubjectInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. Mathematics" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Teacher Email</label>
+                    <input type="email" id="ttTeacherInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="teacher@basaveswara.edu.in" required>
+                  </div>
+                  <button type="submit" class="w-full btn-navy text-xs font-bold py-2.5 rounded-xl shadow-sm whitespace-nowrap">ASSIGN SLOT</button>
+                </form>
+              </div>
+
+              <!-- Visual grid representation -->
+              <div class="border border-slate-200/80 rounded-2xl overflow-hidden bg-white shadow-inner overflow-x-auto">
+                <table class="w-full text-center text-xs border-collapse min-w-[600px]">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200">
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Day</th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 1</th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 2</th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 3</th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 4</th>
+                      <th class="py-3 px-2 border-r border-slate-200 font-bold">Period 5</th>
+                      <th class="py-3 px-2 font-bold">Period 6</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminTimetableGridBody" class="divide-y divide-slate-200 font-medium text-slate-700">
+                    <!-- Dynamic Timetable Rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desk 6.5: Daily Homework assignments (Teacher) -->
+          <div id="deskTeacherHomework" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Daily Homework Planner</h3>
+                <p class="text-xs text-slate-500">Submit homework assignments and class readings directly to your assigned student portals.</p>
+              </div>
+              <form id="homeworkForm" class="space-y-4" onsubmit="handlePostHomework(event)">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject</label>
+                    <input type="text" id="hwSubject" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-slate-50 font-semibold focus:outline-none" placeholder="e.g. Mathematics" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Due Date</label>
+                    <input type="date" id="hwDueDate" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-slate-50 font-semibold focus:outline-none" required>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Assignment Task Details</label>
+                  <textarea id="hwDetails" rows="4" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-slate-50 font-semibold focus:outline-none" placeholder="Read Chapter 5, complete exercises 1 to 10..." required></textarea>
+                </div>
+                <button type="submit" class="btn-navy px-6 py-2.5 font-bold text-xs rounded-xl shadow-md">ASSIGN HOMEWORK</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Desk 7: Clerical Admissions & Enrollment Desk (Clerk) -->
+          <div id="deskClerkWorkspace" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-4">
+              <div class="flex justify-between items-center flex-wrap gap-4">
+                <div>
+                  <h3 class="text-xl font-black font-outfit text-slate-900">Student Admissions Directory</h3>
+                  <p class="text-xs text-slate-500">Query active student rosters and catalogs in real-time.</p>
+                </div>
+                <input type="text" id="clerkSearchStudent" oninput="filterClerkRoster()" class="px-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brand-750" placeholder="Search student by name...">
+              </div>
+              <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150">
+                      <th class="py-3 px-4">Roll ID</th>
+                      <th class="py-3 px-4">Student Name</th>
+                      <th class="py-3 px-4">Email</th>
+                      <th class="py-3 px-4">Class</th>
+                      <th class="py-3 px-4">Enrollment Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="clerkStudentsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- Dynamic -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Parent Support Desk Tickets queries Desk -->
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-4">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Parent Support Tickets Desk</h3>
+                <p class="text-xs text-slate-500">Review parent-submitted help queries and submit replies.</p>
+              </div>
+              <div class="overflow-x-auto border border-slate-150 rounded-2xl">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-150 text-center">
+                      <th class="py-3 px-4 text-left">Ticket ID</th>
+                      <th class="py-3 px-4 text-left">Parent/Student</th>
+                      <th class="py-3 px-4 text-left">Category</th>
+                      <th class="py-3 px-4 text-left">Subject & Details</th>
+                      <th class="py-3 px-4">Status</th>
+                      <th class="py-3 px-4">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="clerkTicketsTableBody" class="divide-y divide-slate-100 text-slate-700">
+                    <!-- Dynamic support tickets -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desk 8: Financial Accounts Desk (Accountant) -->
+          <div id="deskAccountantWorkspace" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-8">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Tuition & Operations Accounts</h3>
+                <p class="text-xs text-slate-500">Register Operational Costs and review Tuition collections ledgers.</p>
+              </div>
+              
+              <!-- Metrics -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                  <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest">Aggregate Tuition Revenues</span>
+                  <p class="text-xl font-black text-emerald-700 mt-1" id="accTotalIncome">INR 0.00</p>
+                </div>
+                <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl">
+                  <span class="text-[9px] font-black text-rose-600 uppercase tracking-widest">Aggregate Operations Cost</span>
+                  <p class="text-xl font-black text-rose-700 mt-1" id="accTotalExpenses">INR 0.00</p>
+                </div>
+                <div class="p-4 bg-indigo-50 border border-indigo-100 rounded-2xl">
+                  <span class="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Total Net Profit Cashflow</span>
+                  <p class="text-xl font-black text-indigo-700 mt-1" id="accNetBalance">INR 0.00</p>
+                </div>
+              </div>
+
+              <!-- Log Expense form -->
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
+                <h4 class="text-xs font-black uppercase text-slate-500 tracking-wider">Log Operating Cost</h4>
+                <form id="accExpenseForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end" onsubmit="handleAccountantAddExpense(event)">
+                  <div class="sm:col-span-2">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Expenditure Rationale Description</label>
+                    <input type="text" id="accExpDescInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. Science Lab Supplies" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Amount (INR)</label>
+                    <input type="number" id="accExpAmtInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. 3500" required>
+                  </div>
+                  <button type="submit" class="w-full btn-navy text-xs font-bold py-2.5 rounded-xl shadow-sm whitespace-nowrap">LOG EXPENSE</button>
+                </form>
+              </div>
+
+              <!-- Miscellaneous costs ledger -->
+              <div>
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Miscellaneous School Expenditures</h4>
+                <div class="border border-slate-200/60 rounded-2xl bg-white overflow-hidden max-h-[300px] overflow-y-auto">
+                  <table class="w-full text-left text-[11px] border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase">
+                        <th class="py-2.5 px-3">Description</th>
+                        <th class="py-2.5 px-3 text-right">Amount</th>
+                        <th class="py-2.5 px-3 text-right">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody id="accExpenseLedgerBody">
+                      <!-- Dynamic -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Log Fee Payment form -->
+              <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 space-y-4">
+                <h4 class="text-xs font-black uppercase text-indigo-750 tracking-wider">Record Student Tuition Payment</h4>
+                <form id="accFeeForm" class="grid grid-cols-1 sm:grid-cols-5 gap-4 items-end" onsubmit="handleAccountantRecordPayment(event)">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Student Roll Number</label>
+                    <input type="text" id="accFeeRollInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. 40001" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Amount Paid (INR)</label>
+                    <input type="number" id="accFeeAmtInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. 15000" required>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payment Mode</label>
+                    <select id="accFeeModeSelect" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" required>
+                      <option value="Cash">Cash</option>
+                      <option value="Online UPI">Online UPI</option>
+                      <option value="Bank Draft">Bank Draft</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Reference / Chq Num</label>
+                    <input type="text" id="accFeeRefInput" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. UPI883921">
+                  </div>
+                  <button type="submit" class="w-full btn-navy text-xs font-bold py-2.5 rounded-xl shadow-sm whitespace-nowrap">RECORD PAYMENT</button>
+                </form>
+              </div>
+
+              <!-- Tuition Balances Ledger Table -->
+              <div>
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Student Tuition Fee Outstanding Ledger</h4>
+                <div class="border border-slate-200/60 rounded-2xl bg-white overflow-hidden max-h-[350px] overflow-y-auto">
+                  <table class="w-full text-left text-[11px] border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase">
+                        <th class="py-2.5 px-3 font-bold">Roll ID</th>
+                        <th class="py-2.5 px-3 font-bold">Student Name</th>
+                        <th class="py-2.5 px-3 font-bold">Classroom</th>
+                        <th class="py-2.5 px-3 text-right font-bold">Total Fee</th>
+                        <th class="py-2.5 px-3 text-right font-bold">Paid Amount</th>
+                        <th class="py-2.5 px-3 text-right font-bold">Outstanding Dues</th>
+                        <th class="py-2.5 px-3 text-center font-bold">Receipt Transmission</th>
+                      </tr>
+                    </thead>
+                    <tbody id="accTuitionLedgerBody">
+                      <!-- Dynamic rows -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Desk 9: Library Catalog Desk (Librarian) -->
+          <div id="deskLibrarianWorkspace" class="desk-pane space-y-6 hidden">
+            <div class="bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 sm:p-8 space-y-6">
+              <div>
+                <h3 class="text-xl font-black font-outfit text-slate-900">Campus Library Registry</h3>
+                <p class="text-xs text-slate-500">Register book checkouts or returns to track inventory logs.</p>
+              </div>
+
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 space-y-4">
+                <h4 class="text-xs font-black uppercase text-slate-500 tracking-wider">Book Checkout & Return Triage</h4>
+                <form id="libraryForm" class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end" onsubmit="handleLibraryAction(event)">
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Operation Type</label>
+                    <select id="libOp" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" required>
+                      <option value="CHECKOUT">Check Out Book</option>
+                      <option value="RETURN">Return Book</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Student Roll ID (For checkout)</label>
+                    <input type="text" id="libRoll" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. 40001">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Book Title</label>
+                    <input type="text" id="libBook" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs bg-white focus:outline-none" placeholder="e.g. Higher Physics" required>
+                  </div>
+                  <button type="submit" class="w-full btn-navy text-xs font-bold py-2.5 rounded-xl shadow-sm whitespace-nowrap">SUBMIT TRANSACTION</button>
+                </form>
+              </div>
+
+              <!-- Checkout ledger list -->
+              <div>
+                <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Checked-Out Library book catalog</h4>
+                <div class="border border-slate-200/60 rounded-2xl bg-white overflow-hidden max-h-[300px] overflow-y-auto">
+                  <table class="w-full text-left text-[11px] border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase">
+                        <th class="py-2.5 px-3">Roll ID</th>
+                        <th class="py-2.5 px-3">Book Title</th>
+                        <th class="py-2.5 px-3 text-center">Status</th>
+                        <th class="py-2.5 px-3 text-right">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody id="libLedgerBody">
+                      <!-- Dynamic -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Desk 10: Unified Employee Profile Desk (Staff) -->
+          <div id="deskStaffWorkspace" class="desk-pane space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+              
+              <!-- Left Profile contract Card -->
+              <div class="md:col-span-4 bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 space-y-6">
+                <div class="text-center pb-4 border-b border-slate-100">
+                  <div class="w-20 h-20 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto text-2xl font-bold font-outfit shadow-inner mb-4">EMP</div>
+                  <h4 id="staffProfileName" class="text-lg font-black font-outfit text-slate-900">Dr. Basavaraj S.</h4>
+                  <span id="staffProfileRole" class="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[9px] font-black rounded-full uppercase tracking-wider mt-1.5 inline-block">Staff</span>
+                </div>
+                <div class="space-y-3 text-xs">
+                  <div class="flex justify-between text-slate-500"><span class="font-semibold">Base Salary:</span> <strong id="staffProfileSalary" class="text-slate-800">INR 35,000</strong></div>
+                  <div class="flex justify-between text-slate-500"><span class="font-semibold">Assigns:</span> <strong id="staffProfileClass" class="text-slate-800">Class 10-A</strong></div>
+                </div>
+              </div>
+
+              <!-- Right Circular Notice Board -->
+              <div class="md:col-span-8 bg-white rounded-3xl border border-slate-200/60 shadow-sm p-6 space-y-4">
+                <h4 class="text-base font-black font-outfit text-slate-900">📢 Official Campus Announcements Notice Board</h4>
+                <div class="space-y-4 max-h-[300px] overflow-y-auto pr-2" id="staffAnnouncementsList">
+                  <!-- Dynamic circulars -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom micro footer -->
+  <footer class="w-full py-4 text-center text-[10px] text-slate-400 border-t border-slate-100 bg-white">
+    <p>&copy; 2026 Sri Basaveswara School Management Board. Secure SaaS Node Network.</p>
+  </footer>
+
+  <!-- Script Dashboard Logic -->
+  <script>
+    const API_URL = "http://localhost:5000/api";
+    let currentUser = null;
+    let currentToken = null;
+    let isMockSimulation = false;
+
+    // Standard list values for lists
+    let classesConfig = [
+      { className: "Class 10", sections: ["A", "B"] },
+      { className: "Class 9", sections: ["A", "B"] },
+      { className: "Class 8", sections: ["A", "B"] }
+    ];
+
+    // Local-persistent sandbox mock users database
+    let mockUsers = JSON.parse(localStorage.getItem("mock_users_db"));
+    if (!mockUsers) {
+      mockUsers = [
+        { name: "Adarsh B A", email: "adhibasavanal@gmail.com", role: "Admin", classAssigned: "All", sectionAssigned: "All", phone: "919876543210", salary: 0, status: "Active", password: "Admin@2026" },
+        { name: "Dr. Basavaraj S.", email: "principal@basaveswara.edu.in", role: "Principal", classAssigned: "All", sectionAssigned: "All", phone: "919876543211", salary: 65000, status: "Active", password: "Principal@2026" },
+        { name: "Smt. Sharanamma M.", email: "teacher@basaveswara.edu.in", role: "Teacher", classAssigned: "Class 10", sectionAssigned: "A", phone: "919876543212", salary: 35000, status: "Active", password: "Teacher@2026" },
+        { name: "Master Abhishek Gowda", email: "student@gmail.com", role: "Student", classAssigned: "Class 10", sectionAssigned: "A", phone: "919876543213", salary: 0, status: "Active", rollNumber: "40001", password: "Student@2026" }
+      ];
+      localStorage.setItem("mock_users_db", JSON.stringify(mockUsers));
+    }
+
+    function saveMockUsers() {
+      localStorage.setItem("mock_users_db", JSON.stringify(mockUsers));
+    }
+
+    // Local-persistent sandbox mock tickets database
+    let mockTickets = JSON.parse(localStorage.getItem("mock_tickets_db"));
+    if (!mockTickets) {
+      mockTickets = [
+        { ticketId: "TCK-4819", email: "student@gmail.com", name: "Master Abhishek Gowda", title: "Requesting School Bus Route 4 Adjustment", details: "The current morning pickup is slightly early. Can it be adjusted by 10 minutes?", category: "Transport Desk", status: "PENDING", reply: null, timestamp: new Date(Date.now() - 3600000 * 2).toISOString() },
+        { ticketId: "TCK-1092", email: "student@gmail.com", name: "Master Abhishek Gowda", title: "Clarification on Mid-Term Mathematics score sheet", details: "Teacher mentioned a correction on grading sheet 2, please recheck.", category: "Academic Score Desk", status: "RESOLVED", reply: "Score updated to 95. verified by teacher Smt. Sharanamma M.", timestamp: new Date(Date.now() - 3600000 * 24).toISOString() }
+      ];
+      localStorage.setItem("mock_tickets_db", JSON.stringify(mockTickets));
+    }
+
+    function saveMockTickets() {
+      localStorage.setItem("mock_tickets_db", JSON.stringify(mockTickets));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      
+      const savedToken = localStorage.getItem("academics_session_token");
+      const savedUser = localStorage.getItem("academics_user_info");
+      
+      if (savedToken && savedUser) {
+        currentToken = savedToken;
+        currentUser = JSON.parse(savedUser);
+        loadWorkspace();
+      }
+    });
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `px-4 py-3 rounded-xl shadow-lg border text-xs font-bold flex items-center gap-2 transform translate-y-2 opacity-0 transition-all duration-300 ${
+        type === 'success' 
+          ? 'bg-emerald-50 border-emerald-100 text-emerald-700' 
+          : 'bg-rose-50 border-rose-100 text-rose-700'
+      }`;
+      
+      const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      
+      lucide.createIcons();
+      
+      setTimeout(() => {
+        toast.classList.remove("translate-y-2", "opacity-0");
+      }, 50);
+      
+      setTimeout(() => {
+        toast.classList.add("translate-y-2", "opacity-0");
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.setAttribute("data-lucide", "eye-off");
+      } else {
+        input.type = "password";
+        icon.setAttribute("data-lucide", "eye");
+      }
+      lucide.createIcons();
+    }
+
+    function switchView(viewId) {
+      document.getElementById("loginView").classList.add("hidden");
+      document.getElementById("signupView").classList.add("hidden");
+      document.getElementById("resetPwView").classList.add("hidden");
+      document.getElementById("workspaceView").classList.add("hidden");
+      
+      document.getElementById(viewId).classList.remove("hidden");
+    }
+
+    function toggleSignupFields() {
+      const role = document.getElementById("signupRole").value;
+      const details = document.getElementById("teacherDetailsForm");
+      if (role === "Teacher") {
+        details.classList.remove("hidden");
+      } else {
+        details.classList.add("hidden");
+      }
+    }
+
+    // --- GATEWAY AUTH CALLS ---
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          // Reject basic students from accessing academics workspace
+          if (data.user.role === "Student") {
+            showToast("Access Denied: Students must sign in using the ParentLink portal gateway.", "error");
+            return;
+          }
+          
+          currentToken = data.sessionToken;
+          currentUser = data.user;
+          
+          // Check forced password reset for Adarsh B A
+          if (currentUser.tempPasswordActive) {
+            switchView("resetPwView");
+            return;
+          }
+          
+          localStorage.setItem("academics_session_token", currentToken);
+          localStorage.setItem("academics_user_info", JSON.stringify(currentUser));
+          
+          showToast(`Logged in successfully. Welcome back to Workspace.`);
+          loadWorkspace();
+        } else {
+          showToast(data.message || "Failed to authenticate.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        // Offline resilience trigger
+        triggerOfflineMockLogin(email, password);
+      }
+    }
+
+    // Staff signup application
+    async function handleSignup(event) {
+      event.preventDefault();
+      const name = document.getElementById("signupName").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const role = document.getElementById("signupRole").value;
+      const classAssigned = role === "Teacher" ? document.getElementById("signupClass").value : "All";
+      const sectionAssigned = role === "Teacher" ? document.getElementById("signupSection").value : "All";
+      const password = document.getElementById("signupPassword").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, role, classAssigned, sectionAssigned, password })
+        });
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          showToast("Credentials application submitted successfully! Waiting for Admin Adarsh B A review.", "success");
+          switchView("loginView");
+        } else {
+          showToast(data.message || "Error submitting staff application.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Offline Server: Mock staff request submitted.", "success");
+        switchView("loginView");
+      }
+    }
+
+    // Password forced rotation handler
+    async function handleTempPasswordReset(event) {
+      event.preventDefault();
+      const newPassword = document.getElementById("resetPasswordInput").value;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/auth/reset-temp`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: currentUser.email, newPassword })
+        });
+        
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        
+        if (data.status === "success") {
+          showToast("Security reset successful! You can now log into your Workspace portal.", "success");
+          
+          // Require signing in using custom secure password
+          switchView("loginView");
+        } else {
+          showToast(data.message || "Reset failed.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Offline Reset: Credentials rotated.", "success");
+        switchView("loginView");
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("academics_session_token");
+      localStorage.removeItem("academics_user_info");
+      currentToken = null;
+      currentUser = null;
+      isMockSimulation = false;
+      switchView("loginView");
+      showToast("Signed out successfully.");
+    }
+
+    // --- WORKSPACE LAYOUT & NAVIGATION CONTROLLERS ---
+
+    function loadWorkspace() {
+      switchView("workspaceView");
+      
+      // Populate offline simulator select dropdown dynamically & control privacy access
+      if (currentUser.role === 'Admin') {
+        document.getElementById("simStaffContainer").classList.remove("hidden");
+        populateOfflineUserSimSelect();
+      } else {
+        document.getElementById("simStaffContainer").classList.add("hidden");
+      }
+      
+      // Dynamic profile labels
+      document.getElementById("displayStaffName").innerText = currentUser.name;
+      document.getElementById("displayStaffEmail").innerText = currentUser.email;
+      
+      const badge = document.getElementById("displayRoleBadge");
+      badge.innerText = `${currentUser.role} Workspace`;
+      
+      // Clear coloring classes
+      badge.className = "px-2.5 py-0.5 rounded text-[9px] font-black tracking-widest uppercase ";
+      if (currentUser.role === 'Admin') badge.className += "bg-rose-50 text-rose-600 border border-rose-100";
+      else if (currentUser.role === 'Principal') badge.className += "bg-emerald-50 text-emerald-600 border border-emerald-100";
+      else if (currentUser.role === 'Teacher') badge.className += "bg-indigo-50 text-indigo-600 border border-indigo-100";
+
+      // Render role sidebar and switch to default active pane
+      renderSidebarMenu();
+      
+      // Auto load first workspace pane
+      const menu = document.getElementById("sidebarMenu");
+      const firstBtn = menu.querySelector("button");
+      if (firstBtn) {
+        firstBtn.click();
+      }
+    }
+
+    function renderSidebarMenu() {
+      const container = document.getElementById("sidebarMenu");
+      container.innerHTML = "";
+      
+      if (currentUser.role === 'Admin') {
+        container.innerHTML = `
+          <button onclick="activatePane('deskAdminFinancials', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="wallet" class="w-4.5 h-4.5"></i> Financial Ledger
+          </button>
+          <button onclick="activatePane('deskAdminSignups', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="user-plus" class="w-4.5 h-4.5"></i> Applicant Approvals
+          </button>
+          <button onclick="activatePane('deskAdminUsers', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="users" class="w-4.5 h-4.5"></i> User Accounts Manager
+          </button>
+          <button onclick="activatePane('deskAdminTimetable', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="calendar" class="w-4.5 h-4.5"></i> Manage Timetable
+          </button>
+          <button onclick="activatePane('deskAdminStaff', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="contact" class="w-4.5 h-4.5"></i> Staff Payroll Directory
+          </button>
+          <button onclick="activatePane('deskAdminLogs', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="terminal" class="w-4.5 h-4.5"></i> Workspace Audit Logs
+          </button>
+        `;
+      } else if (currentUser.role === 'Principal') {
+        container.innerHTML = `
+          <button onclick="activatePane('deskPrincipalApprovals', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="shield-alert" class="w-4.5 h-4.5"></i> Principal Validations
+          </button>
+        `;
+      } else if (currentUser.role === 'Teacher') {
+        container.innerHTML = `
+          <button onclick="activatePane('deskTeacherClasses', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="award" class="w-4.5 h-4.5"></i> Batch Grading Sheet
+          </button>
+          <button onclick="activatePane('deskTeacherAttendance', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="calendar-check" class="w-4.5 h-4.5"></i> Attendance Register
+          </button>
+          <button onclick="activatePane('deskTeacherHomework', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="book-open" class="w-4.5 h-4.5"></i> Daily Homework Tasks
+          </button>
+        `;
+      } else if (currentUser.role === 'Clerk') {
+        container.innerHTML = `
+          <button onclick="activatePane('deskClerkWorkspace', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="users" class="w-4.5 h-4.5"></i> Enrollment Directories
+          </button>
+        `;
+      } else if (currentUser.role === 'Accountant') {
+        container.innerHTML = `
+          <button onclick="activatePane('deskAccountantWorkspace', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="wallet" class="w-4.5 h-4.5"></i> Financial Accounts
+          </button>
+        `;
+      } else if (currentUser.role === 'Librarian') {
+        container.innerHTML = `
+          <button onclick="activatePane('deskLibrarianWorkspace', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="library" class="w-4.5 h-4.5"></i> Book Checkouts Ledger
+          </button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="activatePane('deskStaffWorkspace', this)" class="pane-btn w-full px-4 py-3 rounded-xl font-bold text-xs text-left flex items-center gap-2 transition-colors">
+            <i data-lucide="user" class="w-4.5 h-4.5"></i> Employee Profile
+          </button>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    function activatePane(paneId, buttonEl) {
+      document.querySelectorAll(".desk-pane").forEach(el => el.classList.add("hidden"));
+      document.getElementById(paneId).classList.remove("hidden");
+      
+      document.querySelectorAll(".pane-btn").forEach(btn => {
+        btn.classList.remove("bg-navy-750", "text-white");
+        btn.classList.add("text-slate-600", "hover:bg-slate-100");
+      });
+      
+      buttonEl.classList.remove("text-slate-600", "hover:bg-slate-100");
+      buttonEl.classList.add("bg-navy-750", "text-white");
+      
+      // Async data fetch matching loaded desk pane
+      fetchDeskData(paneId);
+    }
+
+    async function fetchDeskData(paneId) {
+      if (isMockSimulation) {
+        fetchMockDeskData(paneId);
+        return;
+      }
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        if (paneId === 'deskAdminFinancials') {
+          const res = await fetch(`${API_URL}/admin/financials`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderFinancials(data);
+          }
+        } 
+        else if (paneId === 'deskAdminSignups') {
+          const res = await fetch(`${API_URL}/admin/signups`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderSignups(data.signups);
+          }
+        }
+        else if (paneId === 'deskAdminUsers') {
+          const res = await fetch(`${API_URL}/admin/users`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderAdminUsers(data.users);
+          }
+        }
+        else if (paneId === 'deskAdminStaff') {
+          const res = await fetch(`${API_URL}/admin/staff`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderStaff(data.staff);
+          }
+        }
+        else if (paneId === 'deskAdminLogs') {
+          const res = await fetch(`${API_URL}/admin/logs`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderLogs(data.logs);
+          }
+        }
+        else if (paneId === 'deskPrincipalApprovals') {
+          const res = await fetch(`${API_URL}/principal/approvals`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderPrincipalApprovals(data.approvals);
+          }
+        }
+        else if (paneId === 'deskTeacherClasses') {
+          const res = await fetch(`${API_URL}/teacher/classes`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            setupTeacherWorkspace(data);
+          }
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        // Seamlessly enable mock mode on server disconnect
+        console.warn("Connection lost. Operating under local workspace simulation.");
+        isMockSimulation = true;
+        fetchMockDeskData(paneId);
+      }
+    }
+
+    // --- HTML DYNAMIC DATA RENDER DOM UTILITIES ---
+
+    // Admin financials ledger
+    function renderFinancials(data) {
+      const { financials, expenseLedger, salaryLedger } = data;
+      
+      document.getElementById("finTotalIncome").innerText = `INR ${financials.totalIncome.toLocaleString()}.00`;
+      document.getElementById("finTotalExpenses").innerText = `INR ${financials.totalExpenses.toLocaleString()}.00`;
+      document.getElementById("finSalaryExpenses").innerText = `INR ${financials.salaryExpense.toLocaleString()}.00`;
+      document.getElementById("finNetBalance").innerText = `INR ${financials.balance.toLocaleString()}.00`;
+      
+      const balanceEl = document.getElementById("finNetBalance");
+      if (financials.balance >= 0) {
+        balanceEl.className = "text-xl font-black text-emerald-600 mt-1";
+      } else {
+        balanceEl.className = "text-xl font-black text-rose-600 mt-1";
+      }
+
+      // Render Operational Expenses
+      const expBody = document.getElementById("expenseLedgerBody");
+      expBody.innerHTML = "";
+      if (!expenseLedger || expenseLedger.length === 0) {
+        expBody.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400 text-xs">No logged operational expenses.</td></tr>`;
+      } else {
+        expenseLedger.forEach(e => {
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-slate-100 hover:bg-slate-50";
+          tr.innerHTML = `
+            <td class="py-2 px-3 font-semibold text-slate-700">${e.description}</td>
+            <td class="py-2 px-3 text-right font-bold text-rose-600">INR ${e.amount.toLocaleString()}</td>
+            <td class="py-2 px-3 text-right text-slate-400">${new Date(e.date).toLocaleDateString()}</td>
+          `;
+          expBody.appendChild(tr);
+        });
+      }
+
+      // Render Salary slips
+      const salBody = document.getElementById("salaryLedgerBody");
+      salBody.innerHTML = "";
+      if (!salaryLedger || salaryLedger.length === 0) {
+        salBody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400 text-xs">No salary dispatches processed this month.</td></tr>`;
+      } else {
+        salaryLedger.forEach(s => {
+          const tr = document.createElement("tr");
+          tr.className = "border-b border-slate-100 hover:bg-slate-50";
+          tr.innerHTML = `
+            <td class="py-2 px-3 font-semibold text-slate-700">${s.name}</td>
+            <td class="py-2 px-3 text-center text-indigo-600 font-bold">${s.month}</td>
+            <td class="py-2 px-3 text-right font-extrabold text-emerald-600">INR ${s.amountPaid.toLocaleString()}</td>
+            <td class="py-2 px-3 text-right text-slate-400">${new Date(s.date).toLocaleDateString()}</td>
+          `;
+          salBody.appendChild(tr);
+        });
+      }
+    }
+
+    // Add Operation Expense
+    async function handleAddExpense(event) {
+      event.preventDefault();
+      const description = document.getElementById("expDescInput").value.trim();
+      const amount = parseFloat(document.getElementById("expAmtInput").value);
+      
+      if (isMockSimulation) {
+        showToast("Mock: Registered expense on ledger.");
+        document.getElementById("expenseForm").reset();
+        fetchDeskData("deskAdminFinancials");
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/financials/expense`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": currentToken
+          },
+          body: JSON.stringify({ description, category: "Operational", amount })
+        });
+        
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Expense logged successfully!");
+          document.getElementById("expenseForm").reset();
+          fetchDeskData("deskAdminFinancials");
+        } else {
+          showToast(data.message || "Failed to log expense.", "error");
+        }
+      } catch (err) {
+        showToast("Failed to process transaction.", "error");
+      }
+    }
+
+    // Admin applicant signup approval queue
+    function renderSignups(signups) {
+      const container = document.getElementById("signupsTableBody");
+      container.innerHTML = "";
+      
+      if (!signups || signups.length === 0) {
+        container.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 font-bold">Signups queue is clean. No pending applications.</td></tr>`;
+        return;
+      }
+      
+      signups.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        
+        // Add dynamic input for teacher base salary setup
+        let salaryInputHtml = "";
+        if (s.role === "Teacher") {
+          salaryInputHtml = `<input type="number" id="sal-${s.email.replace(/[@.]/g, '')}" class="px-2 py-1 border border-slate-200 rounded text-xs w-20 font-bold" value="30000" placeholder="Salary">`;
+        } else {
+          salaryInputHtml = `<span class="text-slate-400">-</span>`;
+        }
+
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-slate-800">${s.name}</td>
+          <td class="py-3 px-4 text-slate-500 font-mono text-xs">${s.email}</td>
+          <td class="py-3 px-4">
+            <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+              s.role === 'Student' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-indigo-50 text-indigo-600 border border-indigo-100'
+            }">${s.role}</span>
+          </td>
+          <td class="py-3 px-4 font-bold text-slate-600">${s.classAssigned} Section ${s.sectionAssigned}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center justify-center gap-3">
+              ${salaryInputHtml}
+              <button onclick="triageSignup('${s.email}', 'APPROVED')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px] rounded-lg shadow-sm">APPROVE</button>
+              <button onclick="triageSignup('${s.email}', 'REJECTED')" class="px-3 py-1 bg-rose-500 hover:bg-rose-600 text-white font-bold text-[10px] rounded-lg shadow-sm">REJECT</button>
+            </div>
+          </td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    async function triageSignup(email, action) {
+      // Pick dynamic salary setup input value
+      let salary = 0;
+      const salInput = document.getElementById(`sal-${email.replace(/[@.]/g, '')}`);
+      if (salInput) salary = parseFloat(salInput.value);
+      
+      if (isMockSimulation) {
+        showToast(`Mock: Account request successfully ${action.toLowerCase()}.`);
+        fetchDeskData("deskAdminSignups");
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/signups/triage`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": currentToken
+          },
+          body: JSON.stringify({ signupEmail: email, action, salary })
+        });
+        
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast(`Account successfully ${action.toLowerCase()}! Automated notification dispatched.`);
+          fetchDeskData("deskAdminSignups");
+        } else {
+          showToast(data.message || "Failed triaging applicant.", "error");
+        }
+      } catch (err) {
+        showToast("Triage execution error.", "error");
+      }
+    }
+
+    // Admin payroll staff directory
+    function renderStaff(staff) {
+      const container = document.getElementById("staffTableBody");
+      container.innerHTML = "";
+      
+      if (!staff || staff.length === 0) {
+        container.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400">Roster directory is empty.</td></tr>`;
+        return;
+      }
+      
+      staff.forEach(st => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        
+        const key = st.email.replace(/[@.]/g, '');
+        
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-slate-800">${st.name}</td>
+          <td class="py-3 px-4 text-slate-500 font-bold">${st.role}</td>
+          <td class="py-3 px-4 font-semibold text-slate-600">${st.classAssigned}-${st.sectionAssigned}</td>
+          <td class="py-3 px-4 font-extrabold text-navy-750 text-right">INR ${(st.salary || 25000).toLocaleString()}</td>
+          <td class="py-3 px-4 text-center">
+            <select id="month-${key}" class="px-2 py-1 border border-slate-200 rounded text-xs font-bold bg-white focus:outline-none">
+              <option value="May 2026">May 2026</option>
+              <option value="June 2026">June 2026</option>
+              <option value="July 2026">July 2026</option>
+            </select>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="dispatchStaffSalary('${st.email}', 'month-${key}')" class="px-4 py-1.5 btn-navy font-bold text-[10px] rounded-lg shadow-sm whitespace-nowrap">DISPATCH PAYSLIP</button>
+          </td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    async function dispatchStaffSalary(email, selectId) {
+      const month = document.getElementById(selectId).value;
+      
+      if (isMockSimulation) {
+        showToast(`Mock: Pay slip dispatched to employee for ${month}.`);
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/financials/payout`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": currentToken
+          },
+          body: JSON.stringify({ staffEmail: email, month })
+        });
+        
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast(`Salary slip dispatched! Nodemailer alert logged.`);
+        } else {
+          showToast(data.message || "Failed dispatching salary.", "error");
+        }
+      } catch (err) {
+        showToast("Payroll error.", "error");
+      }
+    }
+
+    // System logs inspector
+    function renderLogs(logs) {
+      const term = document.getElementById("logsTerminal");
+      term.innerHTML = "";
+      
+      if (!logs || logs.length === 0) {
+        term.innerHTML = `<div class="text-slate-500">NO SECURE SYSTEM LOGS RECORDED YET.</div>`;
+        return;
+      }
+      
+      logs.forEach(l => {
+        const row = document.createElement("div");
+        row.className = "py-0.5 border-b border-slate-800/60 leading-normal";
+        row.innerHTML = `
+          <span class="text-slate-400">[${new Date(l.timestamp).toLocaleString()}]</span>
+          <span class="text-emerald-400 font-bold">(${l.ip})</span>
+          <span class="text-indigo-400 font-bold">${l.role}:${l.user}</span> &bull;
+          <span class="text-amber-400 font-black">${l.action}</span>
+          <span class="text-slate-300 font-medium ml-1">${l.details}</span>
+        `;
+        term.appendChild(row);
+      });
+    }
+
+
+    // --- Principal approvals queues
+    function renderPrincipalApprovals(approvals) {
+      const container = document.getElementById("principalTableBody");
+      container.innerHTML = "";
+      
+      if (!approvals || approvals.length === 0) {
+        container.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 font-bold">Approvals queue is empty. Clean validations sheets.</td></tr>`;
+        return;
+      }
+      
+      approvals.forEach(ap => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        
+        const list = ap.payload.marksList || [];
+        
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-slate-800">${ap.requestedBy}</td>
+          <td class="py-3 px-4 font-bold text-slate-600">${ap.payload.examSession}</td>
+          <td class="py-3 px-4 text-slate-500 font-bold">${ap.payload.subject}</td>
+          <td class="py-3 px-4 text-center font-bold text-indigo-600">${list.length} Student Files</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="viewTriageGradebook('${ap.approvalId}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border rounded font-bold text-[10px] text-slate-600">INSPECT</button>
+          </td>
+          <td class="py-3 px-4">
+            <div class="flex justify-center gap-2">
+              <button onclick="triagePrincipalApproval('${ap.approvalId}', 'APPROVED')" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px] rounded-lg shadow-sm">VALIDATE</button>
+              <button onclick="triagePrincipalApproval('${ap.approvalId}', 'REJECTED')" class="px-3 py-1 bg-rose-500 hover:bg-rose-600 text-white font-bold text-[10px] rounded-lg shadow-sm">REJECT</button>
+            </div>
+          </td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    async function triagePrincipalApproval(approvalId, action) {
+      if (isMockSimulation) {
+        showToast(`Mock: Submissions catalog successfully ${action.toLowerCase()}.`);
+        fetchDeskData("deskPrincipalApprovals");
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/principal/approvals/triage`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": currentToken
+          },
+          body: JSON.stringify({ approvalId, action })
+        });
+        
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast(`Exam score validation sheet catalog successfully ${action.toLowerCase()}!`);
+          fetchDeskData("deskPrincipalApprovals");
+        } else {
+          showToast(data.message || "Failed validating scores.", "error");
+        }
+      } catch (err) {
+        showToast("Executive triage failed.", "error");
+      }
+    }
+
+
+    // --- Teacher spreadsheet workbook controls
+    let teacherStudentsRoster = [];
+
+    function setupTeacherWorkspace(data) {
+      teacherStudentsRoster = data.students || [];
+      
+      document.getElementById("teacherClassLabel").innerText = `${data.classAssigned} - Section ${data.sectionAssigned}`;
+      
+      // Setup options
+      const sessionSelect = document.getElementById("examSessionSelect");
+      sessionSelect.innerHTML = "";
+      data.exams.forEach(ex => {
+        sessionSelect.innerHTML += `<option value="${ex}">${ex}</option>`;
+      });
+
+      const subjectSelect = document.getElementById("examSubjectSelect");
+      subjectSelect.innerHTML = "";
+      data.subjects.forEach(sb => {
+        subjectSelect.innerHTML += `<option value="${sb}">${sb}</option>`;
+      });
+
+      // Render worksheet inputs spreadsheet
+      const container = document.getElementById("spreadsheetBody");
+      container.innerHTML = "";
+      
+      if (teacherStudentsRoster.length === 0) {
+        container.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-slate-400 font-bold">Roster class list is empty. No students assigned to class.</td></tr>`;
+        return;
+      }
+
+      teacherStudentsRoster.forEach(std => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 font-mono font-bold text-indigo-600 text-center">${std.rollNumber || 'TBD'}</td>
+          <td class="py-2.5 px-4 font-bold text-slate-800">${std.name}</td>
+          <td class="py-1 px-2 border-l border-slate-100 bg-slate-50/20">
+            <input type="number" class="grid-cell-input score-row-input" data-roll="${std.rollNumber}" placeholder="0" min="0">
+          </td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    function resetSpreadsheetInputs() {
+      document.querySelectorAll(".score-row-input").forEach(inp => inp.value = "");
+      showToast("Spreadsheet entries cleared.");
+    }
+
+    async function submitBatchMarks() {
+      const examSession = document.getElementById("examSessionSelect").value;
+      const subject = document.getElementById("examSubjectSelect").value;
+      const maxMarks = parseFloat(document.getElementById("maxMarksInput").value) || 100;
+      
+      const marksList = [];
+      let entryAlert = false;
+
+      document.querySelectorAll(".score-row-input").forEach(inp => {
+        const roll = inp.getAttribute("data-roll");
+        const val = inp.value;
+        if (val !== "") {
+          marksList.push({
+            rollNumber: roll,
+            marks: parseFloat(val),
+            maxMarks: maxMarks
+          });
+        } else {
+          entryAlert = true;
+        }
+      });
+
+      if (marksList.length === 0) {
+        showToast("Spreadsheet cannot be submitted completely empty.", "error");
+        return;
+      }
+
+      if (entryAlert) {
+        if (!confirm("Some student scoring slots were left blank. Submit incomplete gradebook anyway?")) {
+          return;
+        }
+      }
+
+      if (isMockSimulation) {
+        showToast("Mock: Submitted grading sheet to Principal's validation triages.");
+        resetSpreadsheetInputs();
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/teacher/grades/batch`, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": currentToken
+          },
+          body: JSON.stringify({ examSession, subject, marksList })
+        });
+        
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Batch grading spreadsheet submitted successfully! Forwarded to Principal.");
+          resetSpreadsheetInputs();
+        } else {
+          showToast(data.message || "Failed submitting grading sheet.", "error");
+        }
+      } catch (err) {
+        showToast("Error processing batch grades sheet upload.", "error");
+      }
+    }
+
+    // --- WORKSPACE ROLE SIMULATION DRIVERS (Resilient fallback pipeline) ---
+
+    function populateOfflineUserSimSelect() {
+      const select = document.getElementById("offlineUserSimSelect");
+      if (!select) return;
+      
+      select.innerHTML = "";
+      
+      // Filter mockUsers for non-Student roles
+      const staffUsers = mockUsers.filter(u => u.role !== "Student");
+      
+      staffUsers.forEach(u => {
+        const option = document.createElement("option");
+        option.value = u.email;
+        option.innerText = `${u.name} (${u.role})`;
+        if (currentUser && currentUser.email.toLowerCase() === u.email.toLowerCase()) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    }
+
+    function handleOfflineUserSimChange() {
+      const select = document.getElementById("offlineUserSimSelect");
+      if (!select) return;
+      
+      const email = select.value;
+      const foundUser = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (foundUser) {
+        isMockSimulation = true;
+        currentToken = `MOCK_${foundUser.role.toUpperCase()}_SESSION_TOKEN_2026`;
+        currentUser = {
+          email: foundUser.email,
+          role: foundUser.role,
+          name: foundUser.name,
+          classAssigned: foundUser.classAssigned || "All",
+          sectionAssigned: foundUser.sectionAssigned || "All",
+          salary: foundUser.salary || 0
+        };
+        
+        localStorage.setItem("academics_session_token", currentToken);
+        localStorage.setItem("academics_user_info", JSON.stringify(currentUser));
+        
+        showToast(`Simulation switched to: ${foundUser.name} (${foundUser.role})`);
+        loadWorkspace();
+      }
+    }
+
+    function simulateRoleSwitch(role) {
+      currentUser.role = role;
+      
+      // Fallback find first of role
+      const found = mockUsers.find(u => u.role === role);
+      if (found) {
+        currentUser.email = found.email;
+        currentUser.name = found.name;
+        currentUser.classAssigned = found.classAssigned || "All";
+        currentUser.sectionAssigned = found.sectionAssigned || "All";
+        currentUser.salary = found.salary || 0;
+      } else {
+        if (role === 'Admin') {
+          currentUser.email = "adhibasavanal@gmail.com";
+          currentUser.name = "Adarsh B A";
+        } else if (role === 'Principal') {
+          currentUser.email = "principal@basaveswara.edu.in";
+          currentUser.name = "Dr. Basavaraj S.";
+        } else if (role === 'Teacher') {
+          currentUser.email = "teacher@basaveswara.edu.in";
+          currentUser.name = "Smt. Sharanamma M.";
+        }
+      }
+
+      showToast(`Simulation switched: Working under ${role} profile.`);
+      loadWorkspace();
+    }
+
+    function triggerOfflineMockLogin(email, password) {
+      isMockSimulation = true;
+      const cleanEmail = email.trim().toLowerCase();
+      
+      // Look up user in local mockUsers directory first
+      const found = mockUsers.find(u => u.email.toLowerCase().trim() === cleanEmail);
+      if (found) {
+        if (found.role === "Student") {
+          showToast("Students should log in using the ParentLink Portal.", "error");
+          return;
+        }
+        
+        // Validate password/PIN for mock account privacy
+        const expectedPassword = found.password || "Admin@2026"; 
+        if (password !== expectedPassword) {
+          showToast("Access Denied: Incorrect secret password for this staff profile.", "error");
+          return;
+        }
+        
+        currentToken = `MOCK_${found.role.toUpperCase()}_SESSION_TOKEN_2026`;
+        currentUser = {
+          email: found.email,
+          role: found.role,
+          name: found.name,
+          classAssigned: found.classAssigned || "All",
+          sectionAssigned: found.sectionAssigned || "All",
+          salary: found.salary || 0
+        };
+      } else if (cleanEmail === "adhibasavanal@gmail.com") {
+        if (password !== "Admin@2026") {
+          showToast("Access Denied: Incorrect password for Master Admin.", "error");
+          return;
+        }
+        currentToken = "MOCK_ADMIN_SESSION_TOKEN_2026";
+        currentUser = { email, role: "Admin", name: "Adarsh B A" };
+      } else if (cleanEmail === "principal@basaveswara.edu.in") {
+        if (password !== "Principal@2026") {
+          showToast("Access Denied: Incorrect password for Principal.", "error");
+          return;
+        }
+        currentToken = "MOCK_PRINCIPAL_SESSION_TOKEN_2026";
+        currentUser = { email, role: "Principal", name: "Dr. Basavaraj S." };
+      } else if (cleanEmail === "teacher@basaveswara.edu.in") {
+        if (password !== "Teacher@2026") {
+          showToast("Access Denied: Incorrect password for Teacher.", "error");
+          return;
+        }
+        currentToken = "MOCK_TEACHER_SESSION_TOKEN_2026";
+        currentUser = { email, role: "Teacher", name: "Smt. Sharanamma M.", classAssigned: "Class 10", sectionAssigned: "A" };
+      } else {
+        showToast("Offline entry failed. Account not found in active rosters.", "error");
+        return;
+      }
+
+      localStorage.setItem("academics_session_token", currentToken);
+      localStorage.setItem("academics_user_info", JSON.stringify(currentUser));
+      
+      showToast(`Authentication Successful. Sandbox simulation mode activated.`);
+      loadWorkspace();
+    }
+
+    // Seed mock visual tables for complete UI preview offline
+    function fetchMockDeskData(paneId) {
+      if (paneId === 'deskAdminFinancials') {
+        const mockFin = {
+          financials: { totalIncome: 145000, totalExpenses: 47500, salaryExpense: 35000, balance: 97500 },
+          expenseLedger: [
+            { description: "Classroom Whiteboards", amount: 8500, date: new Date().toISOString() },
+            { description: "Broadband Wi-Fi Routers", amount: 4000, date: new Date().toISOString() }
+          ],
+          salaryLedger: [
+            { name: "Smt. Sharanamma M.", month: "May 2026", amountPaid: 35000, date: new Date().toISOString() }
+          ]
+        };
+        renderFinancials(mockFin);
+      }
+      else if (paneId === 'deskAdminSignups') {
+        const mockSign = [
+          { name: "Master Suresh Gowda", email: "suresh@gmail.com", role: "Student", classAssigned: "Class 10", sectionAssigned: "A" },
+          { name: "Smt. Jayamma R.", email: "jayamma@basaveswara.edu.in", role: "Teacher", classAssigned: "Class 9", sectionAssigned: "B" }
+        ];
+        renderSignups(mockSign);
+      }
+      else if (paneId === 'deskAdminStaff') {
+        const mockStaff = [
+          { name: "Dr. Basavaraj S.", role: "Principal", classAssigned: "All", sectionAssigned: "All", salary: 65000, email: "principal@basaveswara.edu.in" },
+          { name: "Smt. Sharanamma M.", role: "Teacher", classAssigned: "Class 10", sectionAssigned: "A", salary: 35000, email: "teacher@basaveswara.edu.in" }
+        ];
+        renderStaff(mockStaff);
+      }
+      else if (paneId === 'deskAdminLogs') {
+        const mockLogs = [
+          { timestamp: new Date().toISOString(), ip: "127.0.0.1", user: "adhibasavanal@gmail.com", role: "Admin", action: "BRANDING_SAVED", details: "Branding parameters updated." },
+          { timestamp: new Date().toISOString(), ip: "127.0.0.1", user: "teacher@basaveswara.edu.in", role: "Teacher", action: "MARKS_BATCH_SUBMIT", details: "Uploaded marks sheet workbook containing 4 records." }
+        ];
+        renderLogs(mockLogs);
+      }
+      else if (paneId === 'deskPrincipalApprovals') {
+        const mockApp = [
+          {
+            approvalId: "APP-98213",
+            requestedBy: "teacher@basaveswara.edu.in",
+            payload: {
+              examSession: "Mid-Term 2026",
+              subject: "Mathematics",
+              marksList: [{ rollNumber: "40001", marks: 95, maxMarks: 100 }]
+            }
+          }
+        ];
+        renderPrincipalApprovals(mockApp);
+      }
+      else if (paneId === 'deskTeacherClasses') {
+        const mockCl = {
+          classAssigned: "Class 10",
+          sectionAssigned: "A",
+          students: [
+            { rollNumber: "40001", name: "Master Abhishek Gowda" },
+            { rollNumber: "40002", name: "Master Chethan B." }
+          ],
+          exams: ["Mid-Term 2026", "Annual Exam 2026"],
+          subjects: ["Mathematics", "Science", "Kannada", "English"]
+        };
+        setupTeacherWorkspace(mockCl);
+      }
+      else if (paneId === 'deskAdminUsers') {
+        renderAdminUsers(mockUsers);
+      }
+    }
+
+    function viewTriageGradebook(approvalId) {
+      alert(`Cryptographic details for validation ticket: ${approvalId}\nInspect sheet contents correctly.`);
+    }
+
+    // --- USER ACCOUNTS MANAGER CLIENT ROUTINES ---
+    let activeRosterUsers = [];
+
+    function renderAdminUsers(users) {
+      activeRosterUsers = users;
+      const container = document.getElementById("adminUsersTableBody");
+      container.innerHTML = "";
+      if (!users || users.length === 0) {
+        container.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 font-bold">Roster directory is empty.</td></tr>`;
+        return;
+      }
+      users.forEach(u => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        let infoText = "";
+        if (u.role === "Student") {
+          infoText = `<span class="font-bold text-slate-600">Class: ${u.classAssigned}-${u.sectionAssigned}</span><br><span class="text-[10px] text-slate-400">Roll: ${u.rollNumber || 'TBD'}</span>`;
+        } else if (u.role === "Teacher") {
+          infoText = `<span class="font-bold text-slate-600">Class: ${u.classAssigned}-${u.sectionAssigned}</span><br><span class="text-[10px] text-slate-400 font-semibold">Sal: INR ${Number(u.salary || 0).toLocaleString()}</span>`;
+        } else {
+          infoText = `<span class="font-semibold text-slate-500">Sal: INR ${Number(u.salary || 0).toLocaleString()}</span>`;
+        }
+        const phoneDisplay = u.phone ? `+${u.phone}` : `<span class="text-slate-400 italic">None</span>`;
+        const statusBadge = (u.status === "Active") ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">ACTIVE</span>` : `<span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-100">REVOKED</span>`;
+        
+        tr.innerHTML = `
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-800">${u.name} ${statusBadge}</div>
+            <div class="text-[11px] text-slate-400 font-mono">${u.email}</div>
+          </td>
+          <td class="py-3 px-4 font-bold">
+            <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+              u.role === 'Student' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : u.role === 'Teacher' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' : 'bg-rose-50 text-rose-600 border border-rose-100'
+            }">${u.role}</span>
+          </td>
+          <td class="py-3 px-4 text-xs font-semibold">${infoText}</td>
+          <td class="py-3 px-4 font-mono text-xs font-semibold text-slate-600">${phoneDisplay}</td>
+          <td class="py-3 px-4 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <button onclick="toggleUserStatus('${u.id}', '${u.status}')" class="px-2.5 py-1.5 ${u.status === 'Active' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600'} text-white font-bold text-[10px] rounded-lg shadow-sm flex items-center gap-1 transition-transform hover:scale-105" title="Toggle Login Access">
+                <i data-lucide="${u.status === 'Active' ? 'shield-off' : 'shield-check'}" class="w-3 h-3"></i> ${u.status === 'Active' ? 'Revoke' : 'Activate'}
+              </button>
+              <button onclick="sendWhatsAppInvite('${u.name}', '${u.email}', 'Admin@2026', '${u.phone || ''}', '${u.role}')" class="px-2.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px] rounded-lg shadow-sm flex items-center gap-1 transition-transform hover:scale-105">
+                <i data-lucide="message-square" class="w-3 h-3"></i> WA
+              </button>
+              <button onclick="deleteUser('${u.email}')" class="px-2.5 py-1.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-[10px] rounded-lg shadow-sm flex items-center gap-1 transition-transform hover:scale-105">
+                <i data-lucide="trash-2" class="w-3 h-3"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        container.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+    
+    async function toggleUserStatus(id, currentStatus) {
+      if (!id || id === 'undefined') {
+        showToast("Error: Real database User ID required to toggle status.", "error");
+        return;
+      }
+      if (!confirm(`Are you sure you want to ${currentStatus === 'Active' ? 'REVOKE' : 'GRANT'} login access for this user?`)) return;
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/users/manage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ op: "TOGGLE_STATUS", userData: { id: id } })
+        });
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast(data.message);
+          fetchDeskData("deskAdminUsers");
+        } else {
+          showToast(data.message || "Failed to toggle status.", "error");
+        }
+      } catch (e) {
+        overlay.classList.add("hidden");
+        showToast("Network error occurred.", "error");
+      }
+    }
+
+    function toggleAddUserFields() {
+      const role = document.getElementById("addUserRole").value;
+      const salaryDiv = document.getElementById("addUserSalaryDiv");
+      const classDiv = document.getElementById("addUserClassDiv");
+      if (role === "Student") {
+        salaryDiv.classList.add("hidden");
+        classDiv.classList.remove("hidden");
+      } else if (role === "Teacher") {
+        salaryDiv.classList.remove("hidden");
+        classDiv.classList.remove("hidden");
+      } else {
+        salaryDiv.classList.remove("hidden");
+        classDiv.classList.add("hidden");
+      }
+    }
+
+    async function handleAdminAddUser(event) {
+      event.preventDefault();
+      const role = document.getElementById("addUserRole").value;
+      const name = document.getElementById("addUserName").value.trim();
+      const email = document.getElementById("addUserEmail").value.trim();
+      const phone = document.getElementById("addUserPhone").value.trim();
+      const salary = parseFloat(document.getElementById("addUserSalary").value) || 0;
+      const classAssigned = (role === "Teacher" || role === "Student") ? document.getElementById("addUserClass").value : "All";
+      const sectionAssigned = (role === "Teacher" || role === "Student") ? document.getElementById("addUserSection").value : "All";
+      const password = document.getElementById("addUserPassword").value || "Admin@2026";
+
+      if (isMockSimulation) {
+        if (mockUsers.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+          showToast("Username/Email already exists in mock roster.", "error");
+          return;
+        }
+        let rollNumber = null;
+        if (role === "Student") {
+          const studentUsers = mockUsers.filter(u => u.role === "Student");
+          const nextRoll = studentUsers.length > 0 ? Math.max(...studentUsers.map(u => parseInt(u.rollNumber || 40000))) + 1 : 40001;
+          rollNumber = nextRoll.toString();
+        }
+        const newUser = { name, email, role, phone, salary: (role !== "Student" ? salary : 0), classAssigned, sectionAssigned, rollNumber, status: "Active", password: password };
+        mockUsers.push(newUser);
+        saveMockUsers();
+        showToast("Mock Profile created! Welcome credentials logged.", "success");
+        document.getElementById("adminAddUserForm").reset();
+        toggleAddUserFields();
+        fetchDeskData("deskAdminUsers");
+        return;
+      }
+
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      try {
+        const response = await fetch(`${API_URL}/admin/users/manage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({
+            op: "ADD",
+            email: email,
+            userData: { name, role, phone, salary, classAssigned, sectionAssigned, password }
+          })
+        });
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast("Profile successfully created! Welcomes sent.");
+          document.getElementById("adminAddUserForm").reset();
+          toggleAddUserFields();
+          fetchDeskData("deskAdminUsers");
+        } else {
+          showToast(data.message || "Failed to create profile.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Error executing profile creation.", "error");
+      }
+    }
+
+    function sendWhatsAppInvite(name, username, password, phone, role) {
+      if (!phone) {
+        showToast("No phone number registered for this roster profile.", "error");
+        return;
+      }
+      const cleanPhone = phone.replace(/\D/g, '');
+      const msg = `Hello ${name}! Your Sri Basaveswara School ERP account has been successfully created by Global Admin Adarsh B A.\n\nAssigned Role: ${role}\nUsername: ${username}\nTemporary Password: ${password}\n\nPlease sign in at academics.mywebsite.com and set your permanent password to begin employment roster actions.`;
+      const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+      showToast(`Redirecting to WhatsApp to invite ${name}...`, "success");
+    }
+
+    async function deleteUser(email) {
+      if (email.toLowerCase() === currentUser.email.toLowerCase()) {
+        showToast("You cannot erase your own active admin session!", "error");
+        return;
+      }
+      if (!confirm(`Are you absolutely sure you want to permanently erase profile for ${email}?`)) return;
+      if (isMockSimulation) {
+        mockUsers = mockUsers.filter(u => u.email.toLowerCase() !== email.toLowerCase());
+        saveMockUsers();
+        showToast("Mock Profile erased from localStorage registry.", "success");
+        fetchDeskData("deskAdminUsers");
+        return;
+      }
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      try {
+        const response = await fetch(`${API_URL}/admin/users/manage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ op: "DELETE", email: email })
+        });
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast("Profile erased successfully.");
+          fetchDeskData("deskAdminUsers");
+        } else {
+          showToast(data.message || "Failed to delete profile.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Failed executing delete request.", "error");
+      }
+    }
+
+    function filterUserRoster() {
+      const q = document.getElementById("searchUserRoster").value.toLowerCase().trim();
+      if (!q) {
+        renderAdminUsers(activeRosterUsers);
+        return;
+      }
+      const filtered = activeRosterUsers.filter(u => 
+        u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.role.toLowerCase().includes(q) || (u.phone && u.phone.includes(q))
+      );
+      const container = document.getElementById("adminUsersTableBody");
+      container.innerHTML = "";
+      if (filtered.length === 0) {
+        container.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 font-bold">No matching records found.</td></tr>`;
+        return;
+      }
+      filtered.forEach(u => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        let infoText = "";
+        if (u.role === "Student") {
+          infoText = `<span class="font-bold text-slate-600">Class: ${u.classAssigned}-${u.sectionAssigned}</span><br><span class="text-[10px] text-slate-400">Roll: ${u.rollNumber || 'TBD'}</span>`;
+        } else if (u.role === "Teacher") {
+          infoText = `<span class="font-bold text-slate-600">Class: ${u.classAssigned}-${u.sectionAssigned}</span><br><span class="text-[10px] text-slate-400 font-semibold">Sal: INR ${Number(u.salary || 0).toLocaleString()}</span>`;
+        } else {
+          infoText = `<span class="font-semibold text-slate-500">Sal: INR ${Number(u.salary || 0).toLocaleString()}</span>`;
+        }
+        const phoneDisplay = u.phone ? `+${u.phone}` : `<span class="text-slate-400 italic">None</span>`;
+        tr.innerHTML = `
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-800">${u.name}</div>
+            <div class="text-[11px] text-slate-400 font-mono">${u.email}</div>
+          </td>
+          <td class="py-3 px-4 font-bold">
+            <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase ${
+              u.role === 'Student' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : u.role === 'Teacher' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' : 'bg-rose-50 text-rose-600 border border-rose-100'
+            }">${u.role}</span>
+          </td>
+          <td class="py-3 px-4 text-xs font-semibold">${infoText}</td>
+          <td class="py-3 px-4 font-mono text-xs font-semibold text-slate-600">${phoneDisplay}</td>
+          <td class="py-3 px-4 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <button onclick="sendWhatsAppInvite('${u.name}', '${u.email}', 'Admin@2026', '${u.phone || ''}', '${u.role}')" class="px-2.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px] rounded-lg shadow-sm flex items-center gap-1 transition-transform hover:scale-105">
+                <i data-lucide="message-square" class="w-3 h-3"></i> WhatsApp
+              </button>
+              <button onclick="deleteUser('${u.email}')" class="px-2.5 py-1.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-[10px] rounded-lg shadow-sm flex items-center gap-1 transition-transform hover:scale-105">
+                <i data-lucide="trash-2" class="w-3 h-3"></i> Delete
+              </button>
+            </div>
+          </td>
+        `;
+        container.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    // --- CLERK: STUDENT ENROLLMENTS DIRECTORY ---
+    let clerkStudents = [];
+    function renderClerkStudents(users) {
+      clerkStudents = users.filter(u => u.role === 'Student');
+      renderClerkTable(clerkStudents);
+    }
+    
+    function renderClerkTable(students) {
+      const container = document.getElementById("clerkStudentsTableBody");
+      container.innerHTML = "";
+      if (!students || students.length === 0) {
+        container.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 font-bold">No active enrollments cataloged.</td></tr>`;
+        return;
+      }
+      students.forEach(st => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-brand-750">${st.rollNumber || 'TBD'}</td>
+          <td class="py-3 px-4 font-bold text-slate-800">${st.name}</td>
+          <td class="py-3 px-4 text-slate-500 font-mono text-xs">${st.email}</td>
+          <td class="py-3 px-4 font-bold text-slate-600">${st.classAssigned}-${st.sectionAssigned}</td>
+          <td class="py-3 px-4 text-slate-400">${st.enrollmentDate ? new Date(st.enrollmentDate).toLocaleDateString() : 'N/A'}</td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    function filterClerkRoster() {
+      const q = document.getElementById("clerkSearchStudent").value.toLowerCase().trim();
+      if (!q) {
+        renderClerkTable(clerkStudents);
+        return;
+      }
+      const filtered = clerkStudents.filter(s => s.name.toLowerCase().includes(q) || (s.rollNumber && s.rollNumber.toString().includes(q)));
+      renderClerkTable(filtered);
+    }
+
+    // --- CLERK: SUPPORT TICKETS DESK ---
+    async function loadClerkTickets() {
+      try {
+        const res = await fetch(`${API_URL}/support/ticket/list`, { headers: { "Authorization": currentToken } });
+        const data = await res.json();
+        if (data.status === "success") {
+          renderClerkTickets(data.tickets);
+        }
+      } catch (e) {
+        console.warn("Offline ticket query fallback.");
+        renderClerkTickets(mockTickets);
+      }
+    }
+
+    function renderClerkTickets(tickets) {
+      const container = document.getElementById("clerkTicketsTableBody");
+      container.innerHTML = "";
+      if (!tickets || tickets.length === 0) {
+        container.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 font-bold">No parent support tickets registered.</td></tr>`;
+        return;
+      }
+      tickets.forEach(t => {
+        let statusBadge = `<span class="px-2 py-0.5 text-[9px] font-black tracking-wider rounded-full bg-amber-50 text-amber-700 border border-amber-100 animate-pulse">PENDING</span>`;
+        if (t.status === "RESOLVED") {
+          statusBadge = `<span class="px-2 py-0.5 text-[9px] font-black tracking-wider rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">RESOLVED</span>`;
+        }
+        
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition-colors";
+        
+        let actionHTML = "";
+        if (t.status === "PENDING") {
+          actionHTML = `
+            <div class="flex gap-2 justify-center">
+              <input type="text" id="reply-${t.ticketId}" class="px-2.5 py-1 border border-slate-200 rounded-lg text-[10px] w-40 focus:outline-none focus:border-brand-750" placeholder="Type resolution reply...">
+              <button onclick="resolveClerkTicket('${t.ticketId}')" class="px-3 py-1 bg-brand-750 text-white font-bold text-[10px] rounded-lg shadow-sm hover:scale-105 transition-transform flex items-center gap-1 shrink-0">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i> Resolve
+              </button>
+            </div>
+          `;
+        } else {
+          actionHTML = `
+            <div class="text-[10px] text-slate-500 italic max-w-[240px] truncate text-center" title="${t.reply}">
+              Resolved: "${t.reply}"
+            </div>
+          `;
+        }
+        
+        tr.innerHTML = `
+          <td class="py-3.5 px-4 font-mono font-bold text-brand-750">${t.ticketId}</td>
+          <td class="py-3.5 px-4 font-bold text-slate-800">${t.name}</td>
+          <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-slate-600">${t.category}</span></td>
+          <td class="py-3.5 px-4 text-left">
+            <p class="font-bold text-slate-800 text-xs">${t.title}</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">${t.details}</p>
+            <p class="text-[8px] text-slate-400 mt-1">${new Date(t.timestamp).toLocaleString()}</p>
+          </td>
+          <td class="py-3.5 px-4 text-center">${statusBadge}</td>
+          <td class="py-3.5 px-4 text-center">${actionHTML}</td>
+        `;
+        container.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    async function resolveClerkTicket(ticketId) {
+      const replyInput = document.getElementById(`reply-${ticketId}`);
+      const reply = replyInput.value.trim() || "Addressed and resolved by campus clerical desk.";
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      try {
+        const res = await fetch(`${API_URL}/support/ticket/resolve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ ticketId, reply })
+        });
+        const data = await res.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast("Ticket marked as RESOLVED!");
+          loadClerkTickets();
+        } else {
+          showToast(data.message || "Failed to resolve ticket.", "error");
+        }
+      } catch (e) {
+        overlay.classList.add("hidden");
+        // Offline resolve simulation
+        const t = mockTickets.find(x => x.ticketId === ticketId);
+        if (t) {
+          t.status = "RESOLVED";
+          t.reply = reply;
+          saveMockTickets();
+        }
+        showToast("Offline: Support ticket resolved.");
+        renderClerkTickets(mockTickets);
+      }
+    }
+
+    // --- ACCOUNTANT: FINANCIAL LOGGING ---
+    async function handleAccountantAddExpense(event) {
+      event.preventDefault();
+      const rationale = document.getElementById("accExpDescInput").value.trim();
+      const amount = parseFloat(document.getElementById("accExpAmtInput").value);
+      
+      if (isMockSimulation) {
+        showToast("Mock: Registered expense on ledger.");
+        document.getElementById("accExpenseForm").reset();
+        fetchDeskData("deskAccountantWorkspace");
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/financials/expense`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ rationale, amount })
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Expense logged successfully!");
+          document.getElementById("accExpenseForm").reset();
+          fetchDeskData("deskAccountantWorkspace");
+        } else {
+          showToast(data.message || "Failed to log expense.", "error");
+        }
+      } catch (err) {
+        showToast("Failed to process transaction.", "error");
+      }
+    }
+
+    async function handleAccountantRecordPayment(event) {
+      event.preventDefault();
+      const rollNumber = document.getElementById("accFeeRollInput").value.trim();
+      const amount = parseFloat(document.getElementById("accFeeAmtInput").value);
+      const mode = document.getElementById("accFeeModeSelect").value;
+      const reference = document.getElementById("accFeeRefInput").value.trim() || "N/A";
+      
+      if (isMockSimulation) {
+        showToast("Mock: Payment recorded successfully!");
+        const student = mockUsers.find(u => u.rollNumber === rollNumber && u.role === "Student");
+        if (!student) {
+          showToast("Student not found in mock database.", "error");
+          return;
+        }
+        
+        const mockFeesKey = "mock_fees_db_" + rollNumber;
+        let mockFees = JSON.parse(localStorage.getItem(mockFeesKey)) || {
+          rollNumber: rollNumber,
+          totalDue: 45000,
+          paidAmount: 0,
+          history: []
+        };
+        
+        mockFees.paidAmount += amount;
+        const receiptId = "PAY-" + Math.floor(100000 + Math.random() * 900000);
+        mockFees.history.push({
+          receiptId: receiptId,
+          amount: amount,
+          mode: mode,
+          reference: reference,
+          timestamp: new Date().toISOString(),
+          receivedBy: currentUser.email
+        });
+        localStorage.setItem(mockFeesKey, JSON.stringify(mockFees));
+        
+        document.getElementById("accFeeForm").reset();
+        fetchDeskData("deskAccountantWorkspace");
+        
+        const confirmSend = confirm(`Do you want to send the WhatsApp confirmation receipt to the parent?`);
+        if (confirmSend) {
+          sendWhatsAppReceipt(rollNumber, student.name, amount, receiptId, student.phone || "919876543210");
+        }
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/admin/financials/pay`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ rollNumber, amount, mode, reference })
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Payment recorded successfully!");
+          document.getElementById("accFeeForm").reset();
+          fetchDeskData("deskAccountantWorkspace");
+          
+          const student = activeTuitionUsers.find(u => u.rollNumber === rollNumber);
+          const name = student ? student.name : "Student";
+          const phone = student && student.phone ? student.phone : "919876543210";
+          
+          const confirmSend = confirm(`Do you want to send the WhatsApp confirmation receipt to the parent?`);
+          if (confirmSend) {
+            sendWhatsAppReceipt(rollNumber, name, amount, data.receipt.receiptId, phone);
+          }
+        } else {
+          showToast(data.message || "Failed to record payment.", "error");
+        }
+      } catch (err) {
+        showToast("Error logging tuition payment.", "error");
+      }
+    }
+
+    function sendWhatsAppReceipt(rollNumber, studentName, amount, receiptId, phone) {
+      const cleanPhone = phone.toString().replace(/\D/g, '');
+      const formattedPhone = cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone;
+      
+      const receiptUrl = `https://basaveswara.edu.in/receipts/verify?id=${receiptId}`;
+      const msg = `🧾 *Sri Basaveswara High School - Fee Payment Receipt*\n\nDear Parent/Student,\nWe have successfully received tuition fee payment:\n\n*Student:* ${studentName}\n*Roll Number:* ${rollNumber}\n*Receipt ID:* ${receiptId}\n*Amount:* INR ${amount.toLocaleString()}.00\n\nScan QR or click link to download verified official seal invoice statement:\n${receiptUrl}\n\nThank you,\nAccountant, Sri Basaveswara School.`;
+      
+      const url = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    let activeTuitionUsers = [];
+    function renderAccountantTuitionLedger(users, feesLedger) {
+      const students = users.filter(u => u.role === "Student");
+      activeTuitionUsers = students;
+      const body = document.getElementById("accTuitionLedgerBody");
+      body.innerHTML = "";
+      
+      if (students.length === 0) {
+        body.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-slate-400 text-xs font-bold">No students registered in roster.</td></tr>`;
+        return;
+      }
+      
+      students.forEach(s => {
+        let fee = feesLedger ? feesLedger.find(f => f.rollNumber === s.rollNumber) : null;
+        if (!fee && isMockSimulation) {
+          const mockFeesKey = "mock_fees_db_" + s.rollNumber;
+          fee = JSON.parse(localStorage.getItem(mockFeesKey));
+        }
+        
+        const total = fee ? parseFloat(fee.totalDue || 45000) : 45000;
+        const paid = fee ? parseFloat(fee.paidAmount || 0) : 0;
+        const due = total - paid;
+        
+        const tr = document.createElement("tr");
+        tr.className = "border-b border-slate-100 hover:bg-slate-50 text-[11px]";
+        
+        let receiptAction = `<span class="text-slate-400 italic">No payments logged</span>`;
+        if (fee && fee.history && fee.history.length > 0) {
+          const lastHistory = fee.history[fee.history.length - 1];
+          receiptAction = `<button onclick="sendWhatsAppReceipt('${s.rollNumber}', '${s.name}', ${lastHistory.amount}, '${lastHistory.receiptId}', '${s.phone || '919876543210'}')" class="px-2.5 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded border border-emerald-250 font-bold text-[9px] flex items-center gap-1 mx-auto transition-colors">
+            WhatsApp Receipt
+          </button>`;
+        }
+        
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono font-bold text-indigo-600">${s.rollNumber}</td>
+          <td class="py-2.5 px-3 font-semibold text-slate-700">${s.name}</td>
+          <td class="py-2.5 px-3 text-slate-550 font-bold">${s.classAssigned} - ${s.sectionAssigned}</td>
+          <td class="py-2.5 px-3 text-right text-slate-550 font-bold">INR ${total.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-right text-emerald-600 font-black">INR ${paid.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-right ${due > 0 ? 'text-rose-600 font-black animate-pulse' : 'text-emerald-600 font-black'}">INR ${due.toLocaleString()}</td>
+          <td class="py-2.5 px-3 text-center">${receiptAction}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    // --- LIBRARIAN: BOOK CHECKOUTS ---
+    async function handleLibraryAction(event) {
+      event.preventDefault();
+      const op = document.getElementById("libOp").value;
+      const rollNumber = document.getElementById("libRoll").value.trim();
+      const bookTitle = document.getElementById("libBook").value.trim();
+      
+      if (isMockSimulation) {
+        showToast(`Mock: Library transaction processed successfully!`);
+        document.getElementById("libraryForm").reset();
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/library`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ op, rollNumber, bookTitle })
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Library ledger updated successfully!");
+          document.getElementById("libraryForm").reset();
+          fetchDeskData("deskLibrarianWorkspace");
+        } else {
+          showToast(data.message || "Failed processing library checkout.", "error");
+        }
+      } catch (err) {
+        showToast("Error processing checkout request.", "error");
+      }
+    }
+
+    function renderLibrary(library) {
+      const container = document.getElementById("libLedgerBody");
+      container.innerHTML = "";
+      if (!library || library.length === 0) {
+        container.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400 text-xs">No active checked-out books.</td></tr>`;
+        return;
+      }
+      library.forEach(l => {
+        const tr = document.createElement("tr");
+        tr.className = "border-b border-slate-100 hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="py-2 px-3 font-mono font-bold text-indigo-600">${l.rollNumber}</td>
+          <td class="py-2 px-3 font-semibold text-slate-700">${l.bookTitle}</td>
+          <td class="py-2 px-3 text-center">
+            <span class="px-2 py-0.5 text-[9px] font-black rounded-full uppercase ${
+              l.status === 'CHECKED_OUT' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600'
+            }">${l.status}</span>
+          </td>
+          <td class="py-2 px-3 text-right text-slate-400">${new Date(l.checkoutDate).toLocaleDateString()}</td>
+        `;
+        container.appendChild(tr);
+      });
+    }
+
+    // --- TEACHER: ASSIGN HOMEWORK ---
+    async function handlePostHomework(event) {
+      event.preventDefault();
+      const subject = document.getElementById("hwSubject").value.trim();
+      const dueDate = document.getElementById("hwDueDate").value;
+      const taskDetails = document.getElementById("hwDetails").value.trim();
+      
+      if (isMockSimulation) {
+        showToast("Mock: Daily homework task published!");
+        document.getElementById("homeworkForm").reset();
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/homework`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({
+            classAssigned: currentUser.classAssigned,
+            sectionAssigned: currentUser.sectionAssigned,
+            subject,
+            taskDetails,
+            dueDate
+          })
+        });
+        const data = await response.json();
+        if (data.status === "success") {
+          showToast("Homework assigned & published successfully!");
+          document.getElementById("homeworkForm").reset();
+        } else {
+          showToast(data.message || "Failed to post homework.", "error");
+        }
+      } catch (err) {
+        showToast("Error executing homework submit.", "error");
+      }
+    }
+
+    // --- STAFF: EMPLOYEE CONTRACT DETAILS ---
+    function setupStaffWorkspace(data) {
+      document.getElementById("staffProfileName").innerText = currentUser.name;
+      document.getElementById("staffProfileRole").innerText = `${currentUser.role} Profile`;
+      document.getElementById("staffProfileSalary").innerText = `INR ${Number(currentUser.salary || 35000).toLocaleString()}.00 Monthly`;
+      document.getElementById("staffProfileClass").innerText = `${currentUser.classAssigned || 'All'}-${currentUser.sectionAssigned || 'All'}`;
+      
+      renderAnnouncements(data.announcements || []);
+    }
+
+    function renderAnnouncements(announcements) {
+      const container = document.getElementById("staffAnnouncementsList");
+      container.innerHTML = "";
+      if (!announcements || announcements.length === 0) {
+        container.innerHTML = `<div class="py-8 text-center text-xs text-slate-400">Notice board circulars are clean.</div>`;
+        return;
+      }
+      announcements.forEach(a => {
+        const item = document.createElement("div");
+        item.className = "p-4 border border-slate-100 rounded-2xl bg-slate-50/50 flex flex-col gap-2 text-xs text-slate-600";
+        item.innerHTML = `
+          <div class="flex justify-between font-bold text-slate-800 border-b border-slate-100 pb-1">
+            <span class="text-indigo-900">${a.title}</span>
+            <span class="text-[9px] text-slate-400 font-mono font-medium">${new Date(a.timestamp).toLocaleDateString()}</span>
+          </div>
+          <p class="leading-relaxed text-slate-500 font-medium">${a.content}</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // --- THINK AI DIALOG CHAT SYSTEMS ---
+    function toggleAIChat() {
+      const canvas = document.getElementById("aiChatCanvas");
+      canvas.classList.toggle("opacity-0");
+      canvas.classList.toggle("pointer-events-none");
+      canvas.classList.toggle("translate-y-10");
+    }
+
+    function handleAISubmitKey(event) {
+      if (event.key === 'Enter') {
+        sendAIChatPrompt();
+      }
+    }
+
+    async function sendAIChatPrompt() {
+      const input = document.getElementById("aiChatInput");
+      const prompt = input.value.trim();
+      if (!prompt) return;
+      
+      input.value = "";
+      const log = document.getElementById("aiChatMessages");
+      
+      // Render user prompt
+      const userDiv = document.createElement("div");
+      userDiv.className = "flex gap-2.5 items-start justify-end";
+      userDiv.innerHTML = `
+        <div class="p-3 bg-indigo-50 border border-indigo-100 rounded-2xl shadow-sm text-slate-800 leading-relaxed font-semibold max-w-[80%]">${prompt}</div>
+        <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0 font-bold text-[9px] font-outfit">ME</div>
+      `;
+      log.appendChild(userDiv);
+      log.scrollTop = log.scrollHeight;
+      
+      // Render typing placeholder
+      const typDiv = document.createElement("div");
+      typDiv.id = "aiTyping";
+      typDiv.className = "flex gap-2.5 items-start";
+      typDiv.innerHTML = `
+        <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+        <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed text-slate-400 italic">Thinking...</div>
+      `;
+      log.appendChild(typDiv);
+      log.scrollTop = log.scrollHeight;
+      
+      try {
+        const response = await fetch(`${API_URL}/ai/ask`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ prompt })
+        });
+        const data = await response.json();
+        
+        // Remove typing
+        document.getElementById("aiTyping").remove();
+        
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "flex gap-2.5 items-start";
+        aiDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+          <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed font-semibold max-w-[80%] whitespace-pre-wrap">${data.response || data.message}</div>
+        `;
+        log.appendChild(aiDiv);
+        log.scrollTop = log.scrollHeight;
+        lucide.createIcons();
+      } catch (err) {
+        document.getElementById("aiTyping").remove();
+        const aiDiv = document.createElement("div");
+        aiDiv.className = "flex gap-2.5 items-start";
+        aiDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+          <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed text-rose-600 font-bold">Sorry, I encountered a connection timeout. Please verify Render backend online state.</div>
+        `;
+        log.appendChild(aiDiv);
+        log.scrollTop = log.scrollHeight;
+      }
+    let activeAttendanceStudents = [];
+    function renderTeacherAttendanceRoster(students) {
+      activeAttendanceStudents = students;
+      const body = document.getElementById("attendanceRosterBody");
+      body.innerHTML = "";
+      
+      if (students.length === 0) {
+        body.innerHTML = `<tr><td colspan="3" class="py-4 text-center text-slate-400 text-xs font-bold">No students assigned to your classroom.</td></tr>`;
+        return;
+      }
+      
+      students.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 border-b border-slate-100 text-center";
+        
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold text-indigo-600 text-left">${s.rollNumber}</td>
+          <td class="py-3 px-4 font-semibold text-slate-700 text-left">${s.name}</td>
+          <td class="py-3 px-4 flex justify-center gap-3">
+            <label class="inline-flex items-center cursor-pointer">
+              <input type="radio" name="attStatus_${s.rollNumber}" value="Present" checked class="sr-only peer">
+              <span class="px-3 py-1 text-[10px] font-black rounded-lg border border-slate-200 text-slate-400 bg-white peer-checked:bg-emerald-500 peer-checked:border-emerald-500 peer-checked:text-white transition-all">PRESENT</span>
+            </label>
+            <label class="inline-flex items-center cursor-pointer">
+              <input type="radio" name="attStatus_${s.rollNumber}" value="Absent" class="sr-only peer">
+              <span class="px-3 py-1 text-[10px] font-black rounded-lg border border-slate-200 text-slate-400 bg-white peer-checked:bg-rose-500 peer-checked:border-rose-500 peer-checked:text-white transition-all">ABSENT</span>
+            </label>
+          </td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    async function saveDailyAttendance() {
+      const date = document.getElementById("attRegisterDate").value;
+      if (!date) {
+        showToast("Please pick a valid calendar register date.", "error");
+        return;
+      }
+      
+      const attendanceData = [];
+      activeAttendanceStudents.forEach(s => {
+        const radio = document.querySelector(`input[name="attStatus_${s.rollNumber}"]:checked`);
+        const status = radio ? radio.value : "Present";
+        attendanceData.push({ rollNumber: s.rollNumber, status: status });
+      });
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      if (isMockSimulation) {
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+          showToast("Mock: Daily attendance register saved successfully!");
+          localStorage.setItem("mock_attendance_" + date, JSON.stringify(attendanceData));
+        }, 800);
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/attendance`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ date, attendanceData })
+        });
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast("Daily attendance register updated successfully!");
+        } else {
+          showToast(data.message || "Failed to update attendance.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Failed to process transaction.", "error");
+      }
+    }
+
+    let activeTimetableList = [];
+    function renderAdminTimetableGrid(timetable) {
+      activeTimetableList = timetable;
+      const body = document.getElementById("adminTimetableGridBody");
+      body.innerHTML = "";
+      const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      
+      days.forEach(day => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 border-b border-slate-200";
+        let html = `<td class="py-3 px-2 border-r border-slate-200 font-black bg-slate-50 text-slate-650 w-24">${day}</td>`;
+        
+        for (let p = 1; p <= 6; p++) {
+          const t = timetable.find(x => x.day === day && x.period === p);
+          if (t) {
+            html += `<td class="py-3 px-2 border-r border-slate-200 relative group cursor-pointer" onclick="editTimetableSlot('${day}', ${p}, '${t.subject}', '${t.teacher}')">
+              <div class="font-black text-slate-800 text-[11px]">${t.subject}</div>
+              <div class="text-[9px] text-slate-400 font-semibold">${t.teacher}</div>
+              <div class="absolute inset-0 bg-navy-750/10 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity text-[9px] font-bold text-navy-750">Click to Edit</div>
+            </td>`;
+          } else {
+            html += `<td class="py-3 px-2 border-r border-slate-200 text-slate-300 italic text-[10px] cursor-pointer hover:bg-slate-100" onclick="editTimetableSlot('${day}', ${p}, '', '')">Free Period</td>`;
+          }
+        }
+        tr.innerHTML = html;
+        body.appendChild(tr);
+      });
+    }
+
+    function editTimetableSlot(day, period, subject, teacher) {
+      document.getElementById("ttDaySelect").value = day;
+      document.getElementById("ttPeriodSelect").value = period;
+      document.getElementById("ttSubjectInput").value = subject;
+      document.getElementById("ttTeacherInput").value = teacher;
+      document.getElementById("ttSubjectInput").focus();
+    }
+
+    async function handleSaveTimetableSlot(event) {
+      event.preventDefault();
+      const className = "Class 10";
+      const sectionName = "A";
+      const day = document.getElementById("ttDaySelect").value;
+      const period = parseInt(document.getElementById("ttPeriodSelect").value);
+      const subject = document.getElementById("ttSubjectInput").value.trim();
+      const teacher = document.getElementById("ttTeacherInput").value.trim();
+      
+      const overlay = document.getElementById("loadingOverlay");
+      overlay.classList.remove("hidden");
+      
+      if (isMockSimulation) {
+        setTimeout(() => {
+          overlay.classList.add("hidden");
+          showToast("Mock: Timetable slot updated successfully!");
+          
+          activeTimetableList = activeTimetableList.filter(t => !(t.day === day && t.period === period));
+          activeTimetableList.push({ className, sectionName, day, period, subject, teacher });
+          renderAdminTimetableGrid(activeTimetableList);
+          document.getElementById("ttSchedulerForm").reset();
+        }, 600);
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/timetable`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": currentToken },
+          body: JSON.stringify({ className, sectionName, day, period, subject, teacher })
+        });
+        const data = await response.json();
+        overlay.classList.add("hidden");
+        if (data.status === "success") {
+          showToast("Timetable slot updated successfully!");
+          document.getElementById("ttSchedulerForm").reset();
+          loadAdminTimetable();
+        } else {
+          showToast(data.message || "Failed to save slot.", "error");
+        }
+      } catch (err) {
+        overlay.classList.add("hidden");
+        showToast("Error updating weekly schedule.", "error");
+      }
+    }
+
+    async function loadAdminTimetable() {
+      if (isMockSimulation) {
+        const mockTimetable = [];
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const subjects = ["Mathematics", "Science", "Kannada", "English", "Social Studies", "Physical Education"];
+        days.forEach(day => {
+          for (let p = 1; p <= 6; p++) {
+            mockTimetable.push({
+              className: "Class 10",
+              sectionName: "A",
+              day: day,
+              period: p,
+              subject: subjects[(p - 1 + days.indexOf(day)) % subjects.length],
+              teacher: "sharanamma@basaveswara.edu.in"
+            });
+          }
+        });
+        renderAdminTimetableGrid(mockTimetable);
+        return;
+      }
+      
+      try {
+        const res = await fetch(`${API_URL}/timetable?className=Class%2010&sectionName=A`, {
+          headers: { "Authorization": currentToken }
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          renderAdminTimetableGrid(data.timetable);
+        }
+      } catch (e) {
+        console.error("Timetable load error:", e);
+      }
+    }
+
+    // EXTEND PANE DATA LOADER TRIAGE
+    const originalFetchDeskData = fetchDeskData;
+    fetchDeskData = async function(paneId) {
+      if (paneId === 'deskClerkWorkspace') {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.classList.remove("hidden");
+        try {
+          const res = await fetch(`${API_URL}/admin/users`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            renderClerkStudents(data.users);
+            loadClerkTickets();
+          }
+        } catch (e) {
+          overlay.classList.add("hidden");
+          renderClerkStudents(mockUsers);
+          loadClerkTickets();
+        }
+      }
+      else if (paneId === 'deskAccountantWorkspace') {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.classList.remove("hidden");
+        try {
+          const res = await fetch(`${API_URL}/admin/financials`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          
+          const usersRes = await fetch(`${API_URL}/admin/users`, { headers: { "Authorization": currentToken } });
+          const usersData = await usersRes.json();
+          
+          overlay.classList.add("hidden");
+          if (data.status === "success" && usersData.status === "success") {
+            document.getElementById("accTotalIncome").innerText = `INR ${data.financials.totalIncome.toLocaleString()}.00`;
+            document.getElementById("accTotalExpenses").innerText = `INR ${data.financials.totalExpenses.toLocaleString()}.00`;
+            document.getElementById("accNetBalance").innerText = `INR ${data.financials.balance.toLocaleString()}.00`;
+            
+            const expBody = document.getElementById("accExpenseLedgerBody");
+            expBody.innerHTML = "";
+            data.expenseLedger.forEach(e => {
+              const tr = document.createElement("tr");
+              tr.className = "border-b border-slate-100 hover:bg-slate-50";
+              tr.innerHTML = `<td class="py-2 px-3 font-semibold text-slate-700">${e.rationale || e.description}</td><td class="py-2 px-3 text-right font-bold text-rose-600">INR ${e.amount.toLocaleString()}</td><td class="py-2 px-3 text-right text-slate-400">${new Date(e.timestamp || e.date).toLocaleDateString()}</td>`;
+              expBody.appendChild(tr);
+            });
+            
+            renderAccountantTuitionLedger(usersData.users, data.feesLedger);
+          }
+        } catch (e) {
+          overlay.classList.add("hidden");
+          showToast("Offline Accountant Sandbox simulation.");
+          
+          let totalMockIncome = 0;
+          mockUsers.filter(u => u.role === 'Student').forEach(s => {
+            const mockFeesKey = "mock_fees_db_" + s.rollNumber;
+            const fee = JSON.parse(localStorage.getItem(mockFeesKey)) || { paidAmount: 15000 };
+            totalMockIncome += fee.paidAmount;
+          });
+          
+          document.getElementById("accTotalIncome").innerText = `INR ${totalMockIncome.toLocaleString()}.00`;
+          document.getElementById("accTotalExpenses").innerText = `INR 47,500.00`;
+          document.getElementById("accNetBalance").innerText = `INR ${(totalMockIncome - 47500).toLocaleString()}.00`;
+          
+          const expBody = document.getElementById("accExpenseLedgerBody");
+          expBody.innerHTML = `
+            <tr class="border-b border-slate-100"><td class="py-2 px-3 font-semibold text-slate-700">Classroom Whiteboards</td><td class="py-2 px-3 text-right font-bold text-rose-600">INR 8,500</td><td class="py-2 px-3 text-right text-slate-400">28/05/2026</td></tr>
+            <tr class="border-b border-slate-100"><td class="py-2 px-3 font-semibold text-slate-700">Broadband Wi-Fi Routers</td><td class="py-2 px-3 text-right font-bold text-rose-600">INR 4,000</td><td class="py-2 px-3 text-right text-slate-400">28/05/2026</td></tr>
+            <tr class="border-b border-slate-100"><td class="py-2 px-3 font-semibold text-slate-700">Smt. Sharanamma M. (Salary)</td><td class="py-2 px-3 text-right font-bold text-rose-600">INR 35,000</td><td class="py-2 px-3 text-right text-slate-400">28/05/2026</td></tr>
+          `;
+          
+          renderAccountantTuitionLedger(mockUsers, null);
+        }
+      }
+      else if (paneId === 'deskTeacherAttendance') {
+        const dateInput = document.getElementById("attRegisterDate");
+        if (!dateInput.value) {
+          dateInput.value = new Date().toISOString().substring(0, 10);
+        }
+        
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.classList.remove("hidden");
+        try {
+          const res = await fetch(`${API_URL}/admin/users`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") {
+            const classAssigned = currentUser.classAssigned || "Class 10";
+            const sectionAssigned = currentUser.sectionAssigned || "A";
+            const students = data.users.filter(u => u.role === "Student" && u.classAssigned === classAssigned && u.sectionAssigned === sectionAssigned);
+            renderTeacherAttendanceRoster(students);
+          }
+        } catch (e) {
+          overlay.classList.add("hidden");
+          const classAssigned = currentUser.classAssigned || "Class 10";
+          const sectionAssigned = currentUser.sectionAssigned || "A";
+          const students = mockUsers.filter(u => u.role === "Student" && u.classAssigned === classAssigned && u.sectionAssigned === sectionAssigned);
+          renderTeacherAttendanceRoster(students);
+        }
+      }
+      else if (paneId === 'deskAdminTimetable') {
+        await loadAdminTimetable();
+      }
+      else if (paneId === 'deskLibrarianWorkspace') {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.classList.remove("hidden");
+        try {
+          const res = await fetch(`${API_URL}/library`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          if (data.status === "success") renderLibrary(data.library);
+        } catch (e) {
+          overlay.classList.add("hidden");
+        }
+      }
+      else if (paneId === 'deskStaffWorkspace') {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.classList.remove("hidden");
+        try {
+          const res = await fetch(`${API_URL}/announcements`, { headers: { "Authorization": currentToken } });
+          const data = await res.json();
+          overlay.classList.add("hidden");
+          setupStaffWorkspace(data);
+        } catch (e) {
+          overlay.classList.add("hidden");
+        }
+      }
+      else {
+        await originalFetchDeskData(paneId);
+      }
+    };
+  </script>
+
+  <!-- THINK AI: Floating Smart Assistant HTML -->
+  <div id="aiChatBubble" onclick="toggleAIChat()" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-r from-brand-750 to-indigo-900 text-white rounded-full flex items-center justify-center cursor-pointer shadow-2xl hover:scale-110 transition-transform relative group">
+    <div class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full animate-ping"></div>
+    <div class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full flex items-center justify-center text-[8px] font-black text-white">1</div>
+    <i data-lucide="brain" class="w-6 h-6 animate-pulse"></i>
+    <span class="absolute right-16 scale-0 group-hover:scale-100 transition-transform bg-slate-900/90 text-white text-[9px] font-black tracking-widest px-3 py-1.5 rounded-xl uppercase whitespace-nowrap shadow-md">Think AI Assistant</span>
+  </div>
+
+  <!-- Sliding AI Chat Canvas -->
+  <div id="aiChatCanvas" class="fixed bottom-24 right-6 z-50 w-80 sm:w-96 h-[480px] bg-white rounded-3xl border border-slate-200/80 shadow-2xl flex flex-col justify-between overflow-hidden transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none">
+    
+    <!-- AI Header -->
+    <div class="bg-gradient-to-r from-brand-750 to-indigo-900 text-white px-5 py-4 flex items-center justify-between shadow-md">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-indigo-300"><i data-lucide="brain" class="w-4 h-4 animate-pulse"></i></div>
+        <div>
+          <h4 class="text-xs font-black tracking-wider uppercase font-outfit">Think AI Assistant</h4>
+          <span class="text-[8px] font-bold text-indigo-200 uppercase tracking-widest block mt-0.5">Sri Basaveswara Cloud Node</span>
+        </div>
+      </div>
+      <button onclick="toggleAIChat()" class="p-1 hover:bg-white/10 rounded-lg transition-colors text-white/70 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <!-- AI Messages Log Area -->
+    <div id="aiChatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 bg-slate-50 text-[11px] text-slate-700">
+      <div class="flex gap-2.5 items-start">
+        <div class="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 border border-indigo-100 font-bold text-[9px] font-outfit">AI</div>
+        <div class="p-3 bg-white rounded-2xl shadow-sm border border-slate-150 leading-relaxed font-semibold">
+          Hello! I am <strong>Think AI</strong>, your dedicated Sri Basaveswara school smart assistant. 
+          <br/><br/>
+          I have read-only cloud database access to help you audit school cash flow balances, compile report cards, query student catalog lists, or generate daily quiz outlines. What can I do for you today?
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Input Console -->
+    <div class="p-3 bg-white border-t border-slate-100 flex gap-2">
+      <input type="text" id="aiChatInput" onkeydown="handleAISubmitKey(event)" class="px-3.5 py-2 border border-slate-200 rounded-xl text-xs flex-grow focus:outline-none focus:border-brand-750 bg-slate-50 font-semibold" placeholder="Ask Think AI anything...">
+      <button onclick="sendAIChatPrompt()" class="p-2.5 bg-brand-750 text-white rounded-xl shadow-md hover:scale-105 transition-transform shrink-0"><i data-lucide="send" class="w-4 h-4"></i></button>
+    </div>
+
+  </div>
+</body>
+</html>
+
